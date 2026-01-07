@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.hcw.langtonsantproject.SimulationScreenController">
 
-            <Label fx:id="simulationscreen" />
-   <Button layoutX="449.0" layoutY="17.0" mnemonicParsing="false" text="Pause" />
+    <Label fx:id="simulationScreen" />
+
+        <Button padding="20" mnemonicParsing="false" onAction="#pauseClicked" text="Pause" />
+
+        <MenuButton fx:id="settingButtonInSimulationScreen" padding="20" mnemonicParsing="false" text="Settings">
+            <items>
+                <MenuItem mnemonicParsing="false" text="Restart" />
+                <MenuItem mnemonicParsing="false" text="Settings" />
+                <MenuItem mnemonicParsing="false" text="Save" />
+                <MenuItem mnemonicParsing="false" text="Exit &amp; Save" />
+                <MenuItem mnemonicParsing="false" text="Exit" />
+            </items>
+        </MenuButton>
+
+
+   <Canvas height="349.0" layoutX="7.0" layoutY="46.0" width="587.0" />
 </AnchorPane>
