@@ -1,9 +1,63 @@
 package at.ac.hcw.langtonsantproject;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.VBox;
 
-public class SettingScreenController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class SettingScreenController implements Initializable {
    @FXML
     public Label settingScreen;
+   @FXML
+   public Button StartButton;
+    @FXML
+    public VBox vBox;
+    public VBox sizeVBox;
+    public VBox stepsVBox;
+    public VBox speedVBOX;
+    public VBox startingPointVBox;
+
+
+    public void StartButtonClick(ActionEvent actionEvent) {
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Slider widthSlider = new Slider();
+        widthSlider.setMin(1);
+        widthSlider.setMax(20);
+        widthSlider.setBlockIncrement(1);
+
+        Slider heightSlider = new Slider();
+        heightSlider.setMin(1);
+        heightSlider.setMax(20);
+        heightSlider.setBlockIncrement(1);
+
+        sizeVBox.getChildren().addAll(widthSlider, heightSlider);
+
+        Slider stepsSlider = new Slider();
+        stepsSlider.setMin(1);
+        stepsSlider.setMax(100);
+        stepsSlider.setBlockIncrement(1);
+
+        stepsVBox.getChildren().addAll(stepsSlider);
+
+        Slider SpeedSlider = new Slider();
+        SpeedSlider.setMin(1);
+        SpeedSlider.setMax(100);
+        SpeedSlider.setBlockIncrement(1);
+
+        speedVBOX.getChildren().addAll(SpeedSlider);
+
+
+
+    }
 }
