@@ -1,4 +1,4 @@
-package at.ac.hcw.langtonsantproject;
+package at.ac.hcw.langtonsantproject.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
