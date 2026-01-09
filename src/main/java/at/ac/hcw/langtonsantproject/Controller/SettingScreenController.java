@@ -44,7 +44,10 @@ public class SettingScreenController extends SceneControl implements Initializab
         heightSlider.setMax(20);
         heightSlider.setBlockIncrement(1);
 
-        sizeVBox.getChildren().addAll(widthSlider, heightSlider);
+        Label widthLabel = new Label("Width: " + widthSlider.getValue());
+        Label heightLabel = new Label("Height: " + heightSlider.getValue());
+        sizeVBox.getChildren().addAll(widthSlider, heightSlider, widthLabel, heightLabel);
+
 
         Slider stepsSlider = new Slider();
         stepsSlider.setMin(1);
