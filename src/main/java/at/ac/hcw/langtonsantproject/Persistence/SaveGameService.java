@@ -1,4 +1,4 @@
-package at.ac.hcw.langtonsantproject.persistence;
+package at.ac.hcw.langtonsantproject.Persistence;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

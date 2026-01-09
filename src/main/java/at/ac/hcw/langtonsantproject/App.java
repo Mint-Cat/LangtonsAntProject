@@ -1,8 +1,8 @@
 package at.ac.hcw.langtonsantproject;
 
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
-import at.ac.hcw.langtonsantproject.persistence.SaveGameService;
-import at.ac.hcw.langtonsantproject.persistence.SettingsState;
+import at.ac.hcw.langtonsantproject.Persistence.SaveGameService;
+import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

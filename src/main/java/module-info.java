@@ -12,6 +12,6 @@ module at.ac.hcw.langtonsantproject {
     opens at.ac.hcw.langtonsantproject.Controller to javafx.fxml;
     exports at.ac.hcw.langtonsantproject.Misc;
     opens at.ac.hcw.langtonsantproject.Misc to javafx.fxml;
-    opens at.ac.hcw.langtonsantproject.persistence to com.google.gson;
+    opens at.ac.hcw.langtonsantproject.Persistence to com.google.gson;
 
 }
