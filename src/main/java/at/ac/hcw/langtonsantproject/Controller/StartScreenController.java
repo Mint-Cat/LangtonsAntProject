@@ -20,19 +20,19 @@ public class StartScreenController extends SceneControl {
 
  @FXML
  private void initialize() {
-
   NameLabel.setStyle("-fx-font-size: 60" );
-
  }
- @FXML
+
+ @FXML //These are func for its respective buttons
    public void NewAntButtonClick(ActionEvent actionEvent) {
+     //Change scene to Settings to make new ant
      ChangeScene(actionEvent,"setting-screen.fxml");
    }
    public void LoadAntButtonClick(ActionEvent actionEvent) {
-
+       //TODO: Load data on existing ant to varaible class
    }
 
    public void DeleteAntButtonClick(ActionEvent actionEvent) {
-
+     //TODO: Delete all data on existing ant
    }
 }

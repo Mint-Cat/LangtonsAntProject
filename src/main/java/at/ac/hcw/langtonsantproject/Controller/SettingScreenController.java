@@ -7,11 +7,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.VBox;
+import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SettingScreenController implements Initializable {
+public class SettingScreenController extends SceneControl implements Initializable {
    @FXML
     public Label settingScreen;
    @FXML
@@ -25,10 +26,14 @@ public class SettingScreenController implements Initializable {
 
 
     public void StartButtonClick(ActionEvent actionEvent) {
+        //TODO: Start Game: Load all vars, initialise ant array with set settings
+        ChangeScene(actionEvent, "simulation-screen.fxml");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //Slider Start Settings
+        //TODO: Change default solder values
         Slider widthSlider = new Slider();
         widthSlider.setMin(1);
         widthSlider.setMax(20);
@@ -54,8 +59,5 @@ public class SettingScreenController implements Initializable {
         SpeedSlider.setBlockIncrement(1);
 
         speedVBOX.getChildren().addAll(SpeedSlider);
-
-
-
     }
 }
