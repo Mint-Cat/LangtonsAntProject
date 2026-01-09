@@ -1,6 +1,8 @@
 module at.ac.hcw.langtonsantproject {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.base;
+    requires javafx.graphics;
 
 
     opens at.ac.hcw.langtonsantproject to javafx.fxml;
