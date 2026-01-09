@@ -1,5 +1,6 @@
 package at.ac.hcw.langtonsantproject.Controller;
 
+import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +28,7 @@ public class SettingScreenController extends SceneControl implements Initializab
 
     public void StartButtonClick(ActionEvent actionEvent) {
         //TODO: Start Game: Load all vars, initialise ant array with set settings
-        ChangeScene(actionEvent, "simulation-screen.fxml");
+        ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
     }
 
     @Override

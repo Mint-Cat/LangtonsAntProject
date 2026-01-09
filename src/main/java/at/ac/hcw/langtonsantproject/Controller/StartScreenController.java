@@ -1,6 +1,7 @@
 package at.ac.hcw.langtonsantproject.Controller;
 
 import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
+import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,8 +26,8 @@ public class StartScreenController extends SceneControl {
 
  @FXML //These are func for its respective buttons
    public void NewAntButtonClick(ActionEvent actionEvent) {
-     //Change scene to Settings to make new ant
-     ChangeScene(actionEvent,"setting-screen.fxml");
+     //Change scene to Settings Scene to make new ant
+     ChangeScene(actionEvent, StaticVarsHolder.SettingsScreen);
    }
    public void LoadAntButtonClick(ActionEvent actionEvent) {
        //TODO: Load data on existing ant to varaible class
