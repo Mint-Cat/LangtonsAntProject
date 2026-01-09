@@ -1,12 +1,13 @@
-package at.ac.hcw.langtonsantproject;
+package at.ac.hcw.langtonsantproject.Controller;
 
+import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-public class StartScreenController {
+public class StartScreenController extends SceneControl {
    @FXML
    public Label startscreen;
    public VBox VBox1;
@@ -14,20 +15,24 @@ public class StartScreenController {
    public Button NewAntButton;
    public Button LoadAntButton;
    public Button DeleteAntButton;
- public Label NameLabel;
+   public Label NameLabel;
 
 
  @FXML
  private void initialize() {
-
   NameLabel.setStyle("-fx-font-size: 60" );
-
  }
 
- public void NewAntButtonClick(ActionEvent actionEvent) {
+ @FXML //These are func for its respective buttons
+   public void NewAntButtonClick(ActionEvent actionEvent) {
+     //Change scene to Settings to make new ant
+     ChangeScene(actionEvent,"setting-screen.fxml");
    }
    public void LoadAntButtonClick(ActionEvent actionEvent) {
+       //TODO: Load data on existing ant to varaible class
    }
+
    public void DeleteAntButtonClick(ActionEvent actionEvent) {
+     //TODO: Delete all data on existing ant
    }
 }

@@ -16,6 +16,7 @@ public class App extends Application {
         stage.setTitle("Langton's Ant Simulation");
         stage.setScene(scene);
         stage.show();
+
     }
 
     public static void main(String[] args) {
