@@ -8,9 +8,9 @@
 
     <Label fx:id="simulationScreen" />
 
-        <Button padding="20" mnemonicParsing="false" onAction="#pauseClicked" text="Pause" />
+        <Button mnemonicParsing="false" onAction="#pauseClicked" text="Pause" />
 
-        <MenuButton fx:id="settingButtonInSimulationScreen" padding="20" mnemonicParsing="false" text="Settings">
+        <MenuButton fx:id="settingButtonInSimulationScreen" mnemonicParsing="false" text="Settings">
             <items>
                 <MenuItem mnemonicParsing="false" text="Restart" />
                 <MenuItem mnemonicParsing="false" text="Settings" />
