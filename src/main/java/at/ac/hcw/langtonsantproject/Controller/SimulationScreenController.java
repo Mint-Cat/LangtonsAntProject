@@ -1,5 +1,7 @@
 package at.ac.hcw.langtonsantproject.Controller;
 
+import at.ac.hcw.langtonsantproject.AppContext;
+import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -11,9 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Priority;
-
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.scene.layout.GridPane;
@@ -32,7 +32,14 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        runTimeInitialise(10,10);
+        // TODO: Add with & height from memory or settings
+        SettingsState settings = AppContext.get().settings;
+        if (settings == null){
+            runTimeInitialise(10,10);
+            return;
+        }
+
+        runTimeInitialise((int)settings.width,(int)settings.height);
     }
     public void runTimeInitialise(int width, int height) {
         antGrid = new boolean[height][width];

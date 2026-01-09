@@ -15,8 +15,6 @@ import java.nio.file.*;
 public class SaveGameService {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-
     private final Path dir = Paths.get(System.getProperty("user.home"), ".langtons-ant");
 
     private Path file(String slot) {
@@ -53,4 +51,3 @@ public class SaveGameService {
         Files.deleteIfExists(file(slot));
     }
 }
-

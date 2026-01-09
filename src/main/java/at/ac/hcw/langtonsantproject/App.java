@@ -49,4 +49,22 @@ public class App extends Application {
             e.printStackTrace();
         }
     }
+    private void testSaveLoad2() {
+        try {
+            SaveGameService service = AppContext.get().saveService;
+            SettingsState s = AppContext.get().settings;
+
+            s.width = 10;
+            s.height = 20;
+            s.steps = 100;
+            s.speed = 3;
+
+            service.save("default", s);
+
+            SettingsState loaded = service.load("default");
+            System.out.println("Loaded: " + loaded.width + " " + loaded.height + " " + loaded.steps + " " + loaded.speed);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.Objects;
 
 
 public abstract class SceneControl {
@@ -15,7 +16,7 @@ public abstract class SceneControl {
     @FXML
     public void ChangeScene(ActionEvent actionEvent, String fileName) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(("/at/ac/hcw/langtonsantproject/" + fileName)));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(("/at/ac/hcw/langtonsantproject/" + fileName))));
 
             Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));

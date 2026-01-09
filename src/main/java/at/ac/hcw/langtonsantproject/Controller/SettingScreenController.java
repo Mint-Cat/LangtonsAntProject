@@ -1,7 +1,8 @@
 package at.ac.hcw.langtonsantproject.Controller;
 
+import at.ac.hcw.langtonsantproject.AppContext;
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
-import at.ac.hcw.langtonsantproject.Controller.SimulationScreenController;
+import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,9 +27,22 @@ public class SettingScreenController extends SceneControl implements Initializab
     public VBox speedVBOX;
     public VBox startingPointVBox;
 
+    public double currentWithSliderValue;
+    public double currentHeighSliderValue;
+    public double currentSpeedValue;
+    public double currentStepsValue;
+
 
     public void StartButtonClick(ActionEvent actionEvent) {
-        //TODO: Start Game: Load all vars, initialise ant array with set settings
+        //TODO: Load all other vars
+        SettingsState settings = AppContext.get().settings;
+        if (settings != null){
+            settings.height = currentHeighSliderValue;
+            settings.width = currentWithSliderValue;
+            settings.speed = currentSpeedValue;
+            settings.steps = (int)currentStepsValue;
+        }
+
         ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
     }
 
@@ -51,21 +65,25 @@ public class SettingScreenController extends SceneControl implements Initializab
         Label widthLabel = new Label("Width: 10");
         Label heightLabel = new Label("Height: 10");
 
+        /// Width
         widthSlider.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     newValue = (int)widthSlider.getValue();
                     widthLabel.setText("Width: " + newValue);
+                    currentWithSliderValue = widthSlider.getValue();
                 }
         );
+        /// Height
         heightSlider.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     newValue = (int)heightSlider.getValue();
                     heightLabel.setText("Height: " + newValue);
+                    currentHeighSliderValue = heightSlider.getValue();
                 }
         );
         sizeVBox.getChildren().addAll(widthSlider, heightSlider, widthLabel, heightLabel);
 
-
+        /// Steps
         Slider stepsSlider = new Slider();
         stepsSlider.setMin(1);
         stepsSlider.setMax(100);
@@ -77,12 +95,12 @@ public class SettingScreenController extends SceneControl implements Initializab
                 (observable, oldValue, newValue) -> {
                     newValue = (int)stepsSlider.getValue();
                     stepsLabel.setText("Steps: " + newValue);
+                    currentStepsValue = stepsSlider.getValue();
                 }
         );
-
         stepsVBox.getChildren().addAll(stepsSlider,  stepsLabel);
 
-
+        /// Speed
         Slider speedSlider = new Slider();
         speedSlider.setMin(1);
         speedSlider.setMax(100);
@@ -93,9 +111,9 @@ public class SettingScreenController extends SceneControl implements Initializab
                 (observable, oldValue, newValue) -> {
                     newValue = (int)speedSlider.getValue();
                     speedLabel.setText("Height: " + newValue);
+                    currentSpeedValue = speedSlider.getValue();
                 }
         );
-
         speedVBOX.getChildren().addAll(speedSlider, speedLabel);
     }
 }
