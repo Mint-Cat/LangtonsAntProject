@@ -3,6 +3,7 @@ module at.ac.hcw.langtonsantproject {
     requires javafx.fxml;
     requires javafx.base;
     requires javafx.graphics;
+    requires com.google.gson;
 
 
     opens at.ac.hcw.langtonsantproject to javafx.fxml;
@@ -11,4 +12,6 @@ module at.ac.hcw.langtonsantproject {
     opens at.ac.hcw.langtonsantproject.Controller to javafx.fxml;
     exports at.ac.hcw.langtonsantproject.Misc;
     opens at.ac.hcw.langtonsantproject.Misc to javafx.fxml;
+    opens at.ac.hcw.langtonsantproject.persistence to com.google.gson;
+
 }
