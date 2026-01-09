@@ -34,7 +34,7 @@ public class SettingScreenController extends SceneControl implements Initializab
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Slider Start Settings
-        //TODO: Change default solder values
+        //TODO: Make input field for x & y coordinates
         Slider widthSlider = new Slider();
         widthSlider.setMin(1);
         widthSlider.setMax(20);
@@ -45,8 +45,23 @@ public class SettingScreenController extends SceneControl implements Initializab
         heightSlider.setMax(20);
         heightSlider.setBlockIncrement(1);
 
-        Label widthLabel = new Label("Width: " + widthSlider.getValue());
-        Label heightLabel = new Label("Height: " + heightSlider.getValue());
+        widthSlider.setValue(10);
+        heightSlider.setValue(10);
+        Label widthLabel = new Label("Width: 10");
+        Label heightLabel = new Label("Height: 10");
+
+        widthSlider.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    newValue = (int)widthSlider.getValue();
+                    widthLabel.setText("Width: " + newValue);
+                }
+        );
+        heightSlider.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    newValue = (int)heightSlider.getValue();
+                    heightLabel.setText("Height: " + newValue);
+                }
+        );
         sizeVBox.getChildren().addAll(widthSlider, heightSlider, widthLabel, heightLabel);
 
 
@@ -55,13 +70,32 @@ public class SettingScreenController extends SceneControl implements Initializab
         stepsSlider.setMax(100);
         stepsSlider.setBlockIncrement(1);
 
-        stepsVBox.getChildren().addAll(stepsSlider);
+        stepsSlider.setValue(50);
+        Label stepsLabel = new Label("Steps: 50");
+        stepsSlider.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    newValue = (int)stepsSlider.getValue();
+                    stepsLabel.setText("Steps: " + newValue);
+                }
+        );
 
-        Slider SpeedSlider = new Slider();
-        SpeedSlider.setMin(1);
-        SpeedSlider.setMax(100);
-        SpeedSlider.setBlockIncrement(1);
+        stepsVBox.getChildren().addAll(stepsSlider,  stepsLabel);
 
-        speedVBOX.getChildren().addAll(SpeedSlider);
+
+
+        Slider speedSlider = new Slider();
+        speedSlider.setMin(1);
+        speedSlider.setMax(100);
+        speedSlider.setBlockIncrement(1);
+        speedSlider.setValue(50);
+        Label speedLabel = new Label("Speed: 50");
+        speedSlider.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    newValue = (int)speedSlider.getValue();
+                    speedLabel.setText("Height: " + newValue);
+                }
+        );
+
+        speedVBOX.getChildren().addAll(speedSlider, speedLabel);
     }
 }
