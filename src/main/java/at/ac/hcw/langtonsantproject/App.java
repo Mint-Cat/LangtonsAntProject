@@ -1,5 +1,6 @@
 package at.ac.hcw.langtonsantproject;
 
+import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import at.ac.hcw.langtonsantproject.persistence.SaveGameService;
 import at.ac.hcw.langtonsantproject.persistence.SettingsState;
 import javafx.application.Application;
@@ -17,7 +18,8 @@ public class App extends Application {
         // OPTIONAL: nur zum Testen (kannst du später wieder löschen)
         testSaveLoad();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("start-screen.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(StaticVarsHolder.StartScreen));
+        fxmlLoader.getController();
         Scene scene = new Scene(fxmlLoader.load(), 720, 480);
 
         stage.setTitle("Langton's Ant Simulation");

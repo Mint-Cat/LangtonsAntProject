@@ -1,6 +1,7 @@
 package at.ac.hcw.langtonsantproject.Controller;
 
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
+import at.ac.hcw.langtonsantproject.Controller.SimulationScreenController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -80,7 +81,6 @@ public class SettingScreenController extends SceneControl implements Initializab
         );
 
         stepsVBox.getChildren().addAll(stepsSlider,  stepsLabel);
-
 
 
         Slider speedSlider = new Slider();

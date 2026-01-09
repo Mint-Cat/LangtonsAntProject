@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.hcw.langtonsantproject.Controller.SimulationScreenController">
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="at.ac.hcw.langtonsantproject.Controller.SimulationScreenController">
 
-    <Label fx:id="simulationScreen" />
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
 
-        <Button mnemonicParsing="false" onAction="#pauseClicked" text="Pause" />
+            <Label fx:id="simulationScreen" text="Simulation"/>
 
-        <MenuButton fx:id="settingButtonInSimulationScreen" mnemonicParsing="false" text="Settings">
-            <items>
-                <MenuItem mnemonicParsing="false" text="Restart" />
-                <MenuItem mnemonicParsing="false" text="Settings" />
-                <MenuItem mnemonicParsing="false" text="Save" />
-                <MenuItem mnemonicParsing="false" text="Exit &amp; Save" />
-                <MenuItem mnemonicParsing="false" text="Exit" />
-            </items>
-        </MenuButton>
+            <Pane HBox.hgrow="ALWAYS" />
 
+            <Button mnemonicParsing="false" onAction="#pauseClicked" text="Pause"/>
 
-   <Canvas height="349.0" layoutX="7.0" layoutY="46.0" width="587.0" />
-</AnchorPane>
+            <MenuButton fx:id="settingButtonInSimulationScreen" mnemonicParsing="false" text="Settings">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Restart"/>
+                    <MenuItem mnemonicParsing="false" text="Settings"/>
+                    <MenuItem mnemonicParsing="false" text="Save"/>
+                    <MenuItem mnemonicParsing="false" text="Exit &amp; Save"/>
+                    <MenuItem mnemonicParsing="false" text="Exit"/>
+                </items>
+            </MenuButton>
+        </HBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <GridPane fx:id="gridPane"
+                      maxWidth="Infinity"
+                      maxHeight="Infinity"/>
+        </StackPane>
+    </center>
+
+</BorderPane>
