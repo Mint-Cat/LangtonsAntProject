@@ -5,16 +5,16 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="at.ac.hcw.langtonsantproject.Controller.SimulationScreenController">
+            fx:controller="at.ac.hcw.langtonsantproject.Controller.SimulationScreenController"
+            prefWidth="720"
+            prefHeight="480">
 
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
 
             <Label fx:id="simulationScreen" text="Simulation"/>
 
-            <Pane HBox.hgrow="ALWAYS" />
-
-            <Button mnemonicParsing="false" onAction="#pauseClicked" text="Pause"/>
+            <Pane HBox.hgrow="ALWAYS"/>
 
             <MenuButton fx:id="settingButtonInSimulationScreen" mnemonicParsing="false" text="Settings">
                 <items>
@@ -25,6 +25,8 @@
                     <MenuItem mnemonicParsing="false" text="Exit"/>
                 </items>
             </MenuButton>
+
+            <Button mnemonicParsing="false" onAction="#pauseClicked" text="Pause"/>
         </HBox>
     </top>
 

@@ -5,14 +5,15 @@
 
 <GridPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
+            fx:id="gridPane"
             fx:controller="at.ac.hcw.langtonsantproject.Controller.SettingScreenController"
             alignment="CENTER"
             prefWidth="720"
             prefHeight="480">
 
             <Label fx:id="settingScreen"/>
-    <VBox fx:id="vBox" alignment="CENTER">
-        <Label>Settings</Label>
+    <VBox fx:id="vBox" alignment="CENTER" spacing="15" GridPane.vgrow="ALWAYS" GridPane.hgrow="always">
+        <Label fx:id="settingsLabel" alignment="TOP_CENTER">Settings</Label>
         <VBox fx:id="sizeVBox" alignment="CENTER">
            <Label>Size</Label>
         </VBox>
