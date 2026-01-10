@@ -164,6 +164,21 @@ public class SettingScreenController extends SceneControl implements Initializab
         row2.setVgrow(Priority.ALWAYS);
         row2.setMinHeight(10);
 
+        RowConstraints row3 = new RowConstraints();
+        row3.setPercentHeight(20);
+        row3.setVgrow(Priority.ALWAYS);
+        row3.setMinHeight(10);
+
+        RowConstraints row4 = new RowConstraints();
+        row4.setPercentHeight(20);
+        row4.setVgrow(Priority.ALWAYS);
+        row4.setMinHeight(10);
+
+        RowConstraints row5 = new RowConstraints();
+        row5.setPercentHeight(20);
+        row5.setVgrow(Priority.ALWAYS);
+        row5.setMinHeight(10);
+
 
         gridPane.getRowConstraints().addAll(row1, row2);
 
@@ -177,7 +192,6 @@ public class SettingScreenController extends SceneControl implements Initializab
         gridPane.add(speedVBOX, 1, 3);
         gridPane.add(startingPointVBox, 1, 4);
         gridPane.add(StartButton,1,5);
-        gridPane.add(vBox, 1, 0, 1, 2);
         StartButton.setMaxWidth(Double.MAX_VALUE);
         StartButton.setAlignment(Pos.CENTER);
 
