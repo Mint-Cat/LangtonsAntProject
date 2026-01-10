@@ -8,8 +8,7 @@
             fx:id="gridPane"
             fx:controller="at.ac.hcw.langtonsantproject.Controller.SettingScreenController"
             alignment="CENTER"
-            prefWidth="720"
-            prefHeight="480">
+            >
 
             <Label fx:id="settingScreen"/>
     <VBox fx:id="vBox" alignment="CENTER" spacing="15" GridPane.vgrow="ALWAYS" GridPane.hgrow="always">
@@ -23,8 +22,12 @@
         <VBox fx:id="speedVBOX" alignment="CENTER">
             <Label>Speed</Label>
         </VBox>
-        <VBox fx:id="startingPointVBox" alignment="CENTER">
+        <VBox fx:id="startingPointVBox" alignment="CENTER" >
             <Label>Starting Point</Label>
+            <HBox fx:id="hBoxCoo" alignment="CENTER" spacing="10">
+                <Label fx:id="xPosLabel"> X: </Label>
+                <Label fx:id="yPosLabel"> Y: </Label>
+            </HBox>
         </VBox>
 
         <Button text="START" fx:id="StartButton" onAction="#StartButtonClick"/>

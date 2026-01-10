@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
 
@@ -36,11 +37,21 @@ public class SettingScreenController extends SceneControl implements Initializab
     public GridPane gridPane;
     @FXML
     public Label settingsLabel;
+    @FXML
+    public Label xPosLabel;
+    @FXML
+    public Label yPosLabel;
+    @FXML
+    public HBox hBoxCoo;
+
 
     public double currentWithSliderValue;
     public double currentHeighSliderValue;
     public double currentSpeedValue;
     public double currentStepsValue;
+    public double currentPosX;
+    public double currentPosY;
+
 
     public void StartButtonClick(ActionEvent actionEvent) {
         //TODO: Load all other vars
@@ -92,31 +103,36 @@ public class SettingScreenController extends SceneControl implements Initializab
 
         // Responsive Rows
         RowConstraints row1 = new RowConstraints();
-        row1.setPercentHeight(20);
+        row1.setPercentHeight(10);
         row1.setVgrow(Priority.ALWAYS);
         row1.setMinHeight(10);
 
         RowConstraints row2 = new RowConstraints();
-        row2.setPercentHeight(20);
+        row2.setPercentHeight(10);
         row2.setVgrow(Priority.ALWAYS);
         row2.setMinHeight(10);
 
         RowConstraints row3 = new RowConstraints();
-        row3.setPercentHeight(20);
+        row3.setPercentHeight(10);
         row3.setVgrow(Priority.ALWAYS);
         row3.setMinHeight(10);
 
         RowConstraints row4 = new RowConstraints();
-        row4.setPercentHeight(20);
+        row4.setPercentHeight(10);
         row4.setVgrow(Priority.ALWAYS);
         row4.setMinHeight(10);
 
         RowConstraints row5 = new RowConstraints();
-        row5.setPercentHeight(20);
+        row5.setPercentHeight(10);
         row5.setVgrow(Priority.ALWAYS);
         row5.setMinHeight(10);
 
-        gridPane.getRowConstraints().addAll(row1, row2);
+        RowConstraints row6 = new RowConstraints();
+        row6.setPercentHeight(10);
+        row6.setVgrow(Priority.ALWAYS);
+        row6.setMinHeight(10);
+
+        gridPane.getRowConstraints().addAll(row1, row2, row3, row4, row5, row6);
 
         // Add all elements to responsive grid
         gridPane.getChildren().clear();
@@ -127,7 +143,8 @@ public class SettingScreenController extends SceneControl implements Initializab
         gridPane.add(stepsVBox, 1, 2);
         gridPane.add(speedVBOX, 1, 3);
         gridPane.add(startingPointVBox, 1, 4);
-        gridPane.add(StartButton,1,5);
+        //gridPane.add(hBoxCoo,1,5);
+        gridPane.add(StartButton,1,6);
         StartButton.setMaxWidth(Double.MAX_VALUE);
         StartButton.setAlignment(Pos.CENTER);
     }
@@ -196,5 +213,24 @@ public class SettingScreenController extends SceneControl implements Initializab
                 }
         );
         speedVBOX.getChildren().addAll(speedSlider, speedLabel);
+
+        // Starting position x & y
+        TextField xPosTextField = new TextField();
+        xPosTextField.setText(String.valueOf(posXDefault));
+        String inputXPos = xPosTextField.getText();
+        currentPosX = Double.parseDouble(inputXPos);
+        TextField yPosTextfield = new TextField();
+        yPosTextfield.setText(String.valueOf(posYDefault));
+        String inputYPos = yPosTextfield.getText();
+        currentPosY = Double.parseDouble(inputYPos);
+
+        xPosTextField.setMinWidth(5);
+        yPosTextfield.setMinWidth(5);
+        xPosLabel.setMinWidth(5);
+        yPosLabel.setMinWidth(5);
+        hBoxCoo.getChildren().clear();
+        hBoxCoo.getChildren().addAll(xPosLabel ,xPosTextField, yPosLabel, yPosTextfield);
+
+
     }
 }
