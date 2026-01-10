@@ -41,6 +41,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
     private Rectangle[][] cellRects;  //UI references
     private StackPane[][] cellPanes; // UI cell containers (for PNG, etc.)
     private static final double CELL_SIZE = 50;
+    private int stepsRemaining;
 
     public int antXLocation;
     public int antYLocation;
@@ -52,23 +53,27 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // TODO: Add with & height from memory or settings
         SettingsState settings = AppContext.get().settings;
         if (settings == null){
             return;
         }
 
+        // Hier rufen wir die Methode nur auf!
         runTimeInitialise(settings);
 
-        //Timeline Stuff
+        // Timeline Stuff
         simLoop = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> MoveAnt()));
         simLoop.setCycleCount(Timeline.INDEFINITE);
 
         startSimulation();
-    }
+    } // <--- DIESE Klammer beendet initialize. Sie muss VOR runTimeInitialise stehen!
+
     public void runTimeInitialise(SettingsState settings) {
         int height = (int)settings.height;
         int width = (int)settings.width;
+
+        // Jetzt erkennt er stepsRemaining, weil es oben in der Klasse steht
+        this.stepsRemaining = (int) settings.steps;
 
         antGrid = new boolean[height][width];
         cellRects = new Rectangle[height][width];
@@ -79,49 +84,91 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
         buildGridUI(width, height);
         redrawAll();
-
         spawnAntImage();
     }
-    //region Ant
-    private void MoveAnt(){
-        boolean moveRight = !antGrid[antYLocation][antXLocation];
 
-        TeleportAntToNewPos(moveRight);
-        moveAntImageTo(antXLocation,antYLocation);
+    private void MoveAnt() {
 
-        currentAntOrientation = ChangeAntOrientation(moveRight);
+            // PRÜFUNG: Wenn keine Schritte mehr übrig sind, sofort stoppen!
+            if (stepsRemaining <= 0) {
+                simLoop.stop();
+                return;
+            }
+
+            // 1. Check current color ...
+            boolean isBlack = antGrid[antYLocation][antXLocation];
+
+        // 2. Turn (White/False -> Right, Black/True -> Left)
+        currentAntOrientation = rotate(isBlack ? -1 : 1);
         updateAntRotation();
 
-        toggleCell(antXLocation,antYLocation);
-    }
-    private AntOrientation ChangeAntOrientation(boolean moveRight){
+        // 3. Flip the color of the square we are standing on
+        toggleCell(antYLocation, antXLocation);
 
-        int i = currentAntOrientation.ordinal(); //enum -> int
-        int toAdd=1;
-        if (!moveRight)
-            toAdd= -1;
-        i = i + toAdd;
+        // 4. Move forward in the NEW direction
+        int dx = 0;
+        int dy = 0;
+        switch (currentAntOrientation) {
+            case up    -> dy = -1;
+            case down  -> dy = 1;
+            case left  -> dx = -1;
+            case right -> dx = 1;
+        }
+
+        int nextX = antXLocation + dx;
+        int nextY = antYLocation + dy;
+
+        // 5. Bounds Check
+        if (nextX < 0 || nextX >= antGrid[0].length || nextY < 0 || nextY >= antGrid.length) {
+            System.out.println("Out of bounds!");
+            stopSimulation();
+            return;
+        }
+        // 6. Update Position
+        antXLocation = nextX;
+        antYLocation = nextY;
+        moveAntImageTo(antXLocation, antYLocation);
+
+        stepsRemaining--;
+        simulationScreen.setText("Schritte übrig: " + stepsRemaining);
+    }
+
+    private AntOrientation rotate(int direction) {
         AntOrientation[] vals = AntOrientation.values();
-        return vals[i % vals.length]; //int -> enum (wrap around)
+        // Adding vals.length before modulo handles negative results (turning left)
+        int nextIndex = (currentAntOrientation.ordinal() + direction + vals.length) % vals.length;
+        return vals[nextIndex];
+
     }
     private void TeleportAntToNewPos(boolean moveRight){
         int dx = 0;
         int dy = 0;
 
-        if (moveRight){
-            switch (currentAntOrientation) {
-                case up -> dx = 1;
-                case right -> dy = -1;
-                case down -> dx = -1;
-                case left -> dy = 1;
+
+            // edge check: stop sim if out of bounds
+            if (antXLocation < 0 || antXLocation >= antGrid[0].length
+                    || antYLocation < 0 || antYLocation >= antGrid.length) {
+
+                System.out.println("[STOP ] out of bounds!");
+                if (simLoop != null) simLoop.stop();
+                return;
             }
-        }
-        else {
+
+
+        if (moveRight){
             switch (currentAntOrientation) {
                 case up -> dx = -1;
                 case right -> dy = 1;
                 case down -> dx = 1;
                 case left -> dy = -1;
+            }
+        }
+        else {
+            switch (currentAntOrientation) {
+                case up -> dx = 1;
+                case right -> dy = -1;
+                case down -> dx = -1;
+                case left -> dy = 1;
             }
         }
 
@@ -142,7 +189,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
             p.getChildren().remove(antView);
         }
 
-        StackPane newCell = cellPanes[x][y];
+        StackPane newCell = cellPanes[y][x];
 
         // Rebind fit size to the new cell so it keeps scaling
         antView.fitWidthProperty().unbind();
