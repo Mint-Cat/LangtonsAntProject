@@ -42,8 +42,6 @@ public class SettingScreenController extends SceneControl implements Initializab
     public double currentSpeedValue;
     public double currentStepsValue;
 
-
-
     public void StartButtonClick(ActionEvent actionEvent) {
         //TODO: Load all other vars
         SettingsState settings = AppContext.get().settings;
@@ -152,7 +150,6 @@ public class SettingScreenController extends SceneControl implements Initializab
 
         gridPane.getColumnConstraints().addAll(col1, col2, col3);
 
-
         // Responsive Rows
         RowConstraints row1 = new RowConstraints();
         row1.setPercentHeight(20);
@@ -179,7 +176,6 @@ public class SettingScreenController extends SceneControl implements Initializab
         row5.setVgrow(Priority.ALWAYS);
         row5.setMinHeight(10);
 
-
         gridPane.getRowConstraints().addAll(row1, row2);
 
         // Add all elements to responsive grid
@@ -194,6 +190,5 @@ public class SettingScreenController extends SceneControl implements Initializab
         gridPane.add(StartButton,1,5);
         StartButton.setMaxWidth(Double.MAX_VALUE);
         StartButton.setAlignment(Pos.CENTER);
-
     }
 }
