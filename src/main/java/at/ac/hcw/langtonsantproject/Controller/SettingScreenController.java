@@ -69,10 +69,16 @@ public class SettingScreenController extends SceneControl implements Initializab
         heightSlider.setMax(20);
         heightSlider.setBlockIncrement(1);
 
-        widthSlider.setValue(10);
-        heightSlider.setValue(10);
-        Label widthLabel = new Label("Width: 10");
-        Label heightLabel = new Label("Height: 10");
+        /// default values
+        int widthDefault = 10;
+        int heighDefault = 10;
+
+        widthSlider.setValue(widthDefault);
+        heightSlider.setValue(heighDefault);
+        Label widthLabel = new Label("Width: " + widthDefault);
+        Label heightLabel = new Label("Height: " +heighDefault);
+        currentHeighSliderValue= heighDefault;
+        currentWithSliderValue = widthDefault;
 
         /// Width
         widthSlider.valueProperty().addListener(

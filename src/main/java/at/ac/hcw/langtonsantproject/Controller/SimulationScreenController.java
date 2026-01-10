@@ -56,7 +56,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
         gridPane.setHgap(1);
         gridPane.setVgap(1);
-        gridPane.setPadding(new Insets(5)); // padding is already on the StackPane in FXML
+        gridPane.setPadding(new Insets(5)); //padding is already on the StackPane in FXML
 
         //Columns = percent width
         for (int col = 0; col < width; col++) {
@@ -97,6 +97,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
                 cellRects[row][col] = r;
                 gridPane.add(cell, col, row);
 
+                ///Mouseclick event setter
                 final int rr = row;
                 final int cc = col;
                 cell.setOnMouseClicked(e -> {
