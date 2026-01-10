@@ -55,82 +55,16 @@ public class SettingScreenController extends SceneControl implements Initializab
         ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Slider Start Settings
-        //TODO: Make input field for x & y coordinates
-        Slider widthSlider = new Slider();
-        widthSlider.setMin(1);
-        widthSlider.setMax(20);
-        widthSlider.setBlockIncrement(1);
+    public Slider makeSlider( int defaultValue, double min, double max){
+        Slider slide = new Slider();
+        slide.setMin(min);
+        slide.setMax(max);
+        slide.setBlockIncrement(1);
+        slide.setValue(defaultValue);
+        return slide;
+    }
 
-        Slider heightSlider = new Slider();
-        heightSlider.setMin(1);
-        heightSlider.setMax(20);
-        heightSlider.setBlockIncrement(1);
-
-        /// default values
-        int widthDefault = 10;
-        int heighDefault = 10;
-
-        widthSlider.setValue(widthDefault);
-        heightSlider.setValue(heighDefault);
-        Label widthLabel = new Label("Width: " + widthDefault);
-        Label heightLabel = new Label("Height: " +heighDefault);
-        currentHeighSliderValue= heighDefault;
-        currentWithSliderValue = widthDefault;
-
-        /// Width
-        widthSlider.valueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    newValue = (int)widthSlider.getValue();
-                    widthLabel.setText("Width: " + newValue);
-                    currentWithSliderValue = widthSlider.getValue();
-                }
-        );
-        /// Height
-        heightSlider.valueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    newValue = (int)heightSlider.getValue();
-                    heightLabel.setText("Height: " + newValue);
-                    currentHeighSliderValue = heightSlider.getValue();
-                }
-        );
-        sizeVBox.getChildren().addAll(widthSlider, heightSlider, widthLabel, heightLabel);
-
-        /// Steps
-        Slider stepsSlider = new Slider();
-        stepsSlider.setMin(1);
-        stepsSlider.setMax(100);
-        stepsSlider.setBlockIncrement(1);
-
-        stepsSlider.setValue(50);
-        Label stepsLabel = new Label("Steps: 50");
-        stepsSlider.valueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    newValue = (int)stepsSlider.getValue();
-                    stepsLabel.setText("Steps: " + newValue);
-                    currentStepsValue = stepsSlider.getValue();
-                }
-        );
-        stepsVBox.getChildren().addAll(stepsSlider,  stepsLabel);
-
-        /// Speed
-        Slider speedSlider = new Slider();
-        speedSlider.setMin(1);
-        speedSlider.setMax(100);
-        speedSlider.setBlockIncrement(1);
-        speedSlider.setValue(50);
-        Label speedLabel = new Label("Speed: 50");
-        speedSlider.valueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    newValue = (int)speedSlider.getValue();
-                    speedLabel.setText("Height: " + newValue);
-                    currentSpeedValue = speedSlider.getValue();
-                }
-        );
-        speedVBOX.getChildren().addAll(speedSlider, speedLabel);
-
+    public void responsive(){
         gridPane.setPadding(new Insets(15));
         gridPane.setHgap(20);
         gridPane.setVgap(20);
@@ -196,5 +130,71 @@ public class SettingScreenController extends SceneControl implements Initializab
         gridPane.add(StartButton,1,5);
         StartButton.setMaxWidth(Double.MAX_VALUE);
         StartButton.setAlignment(Pos.CENTER);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        //Slider Start Settings
+        //TODO: Make input field for x & y coordinates
+
+        responsive();
+
+        // default values
+        int widthDefault = 10;
+        int heighDefault = 10;
+        int stepDefault = 50;
+        int speedDefault = 50;
+        int posXDefault = 5;
+        int posYDefault = 5;
+
+        // Width
+        Slider widthSlider = makeSlider(widthDefault, 1, 20);
+        Label widthLabel = new Label("Width: " + widthDefault);
+        currentWithSliderValue = widthDefault;
+        widthSlider.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    newValue = (int)widthSlider.getValue();
+                    widthLabel.setText("Width: " + newValue);
+                    currentWithSliderValue = widthSlider.getValue();
+                }
+        );
+
+        // Height
+        Slider heightSlider = makeSlider(heighDefault, 1,20);
+        Label heightLabel = new Label("Height: " +heighDefault);
+        currentHeighSliderValue= heighDefault;
+        heightSlider.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    newValue = (int)heightSlider.getValue();
+                    heightLabel.setText("Height: " + newValue);
+                    currentHeighSliderValue = heightSlider.getValue();
+                }
+        );
+
+        sizeVBox.getChildren().addAll(widthSlider, heightSlider, widthLabel, heightLabel);
+
+        // Steps
+        Slider stepsSlider = makeSlider(stepDefault, 1, 100);
+        Label stepsLabel = new Label("Steps: 50");
+        stepsSlider.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    newValue = (int)stepsSlider.getValue();
+                    stepsLabel.setText("Steps: " + newValue);
+                    currentStepsValue = stepsSlider.getValue();
+                }
+        );
+        stepsVBox.getChildren().addAll(stepsSlider,  stepsLabel);
+
+        // Speed
+        Slider speedSlider = makeSlider(speedDefault, 1, 100);
+        Label speedLabel = new Label("Speed: 50");
+        speedSlider.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    newValue = (int)speedSlider.getValue();
+                    speedLabel.setText("Height: " + newValue);
+                    currentSpeedValue = speedSlider.getValue();
+                }
+        );
+        speedVBOX.getChildren().addAll(speedSlider, speedLabel);
     }
 }
