@@ -164,12 +164,8 @@ public class SettingScreenController extends SceneControl implements Initializab
         row2.setVgrow(Priority.ALWAYS);
         row2.setMinHeight(10);
 
-        RowConstraints row3 = new RowConstraints();
-        row3.setPercentHeight(20);
-        row3.setVgrow(Priority.ALWAYS);
-        row3.setMinHeight(10);
 
-        gridPane.getRowConstraints().addAll(row1, row2,row3);
+        gridPane.getRowConstraints().addAll(row1, row2);
 
         // Add all elements to responsive grid
         gridPane.getChildren().clear();

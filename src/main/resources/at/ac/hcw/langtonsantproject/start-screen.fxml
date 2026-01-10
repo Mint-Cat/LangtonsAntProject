@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -12,17 +9,13 @@
             alignment="CENTER"
             hgap="10"
             vgap="10"
+            fx:id="gridPane"
             >
-
             <Label fx:id="startscreen"/>
-
-    <VBox fx:id="VBox1" alignment="TOP_CENTER" spacing="10">
-
-    </VBox>
-    <VBox fx:id="VBox2" alignment="CENTER" spacing="10" >
-        <Label fx:id="NameLabel"> Langton's Ant </Label>
-        <Button fx:id="NewAntButton" text="New Ant" onAction="#NewAntButtonClick"/>
-        <Button fx:id="LoadAntButton" text="Load Ant" onAction="#LoadAntButtonClick" />
-        <Button fx:id="DeleteAntButton" text="Delete Ant" onAction="#DeleteAntButtonClick"/>
-    </VBox>
+<VBox fx:id="parent" >
+        <Label fx:id="NameLabel" alignment="CENTER"> Langton's Ant </Label>
+        <Button fx:id="NewAntButton" text="New Ant" onAction="#NewAntButtonClick" alignment="CENTER"/>
+        <Button fx:id="LoadAntButton" text="Load Ant" onAction="#LoadAntButtonClick" alignment="CENTER"/>
+        <Button fx:id="DeleteAntButton" text="Delete Ant" onAction="#DeleteAntButtonClick" alignment="CENTER"/>
+</VBox>
 </GridPane>

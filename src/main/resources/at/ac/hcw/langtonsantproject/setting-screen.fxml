@@ -28,6 +28,5 @@
         </VBox>
 
         <Button text="START" fx:id="StartButton" onAction="#StartButtonClick"/>
-
     </VBox>
 </GridPane>
