@@ -28,8 +28,6 @@ public class StartScreenController extends SceneControl implements Initializable
  public void initialize(URL url, ResourceBundle resourceBundle) {
   
      NameLabel.setStyle("-fx-font-size: 60" );
-
-
         // Responsive columns
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setPercentWidth(25);

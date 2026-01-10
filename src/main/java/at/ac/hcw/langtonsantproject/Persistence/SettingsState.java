@@ -19,4 +19,7 @@ public class SettingsState {
 
     /** Geschwindigkeit (z.B. Delay, Steps pro Sekunde, Slider-Wert). */
     public double speed;
+
+    public int antStartPointX = 5;
+    public int antStartPointY=5;
 }

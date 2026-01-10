@@ -61,6 +61,7 @@ public class SettingScreenController extends SceneControl implements Initializab
             settings.width = currentWithSliderValue;
             settings.speed = currentSpeedValue;
             settings.steps = (int)currentStepsValue;
+            //TODO: Ant Start Points
         }
 
         ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);

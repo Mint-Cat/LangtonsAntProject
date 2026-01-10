@@ -31,10 +31,9 @@
     </top>
 
     <center>
-        <StackPane>
-            <GridPane fx:id="gridPane"
-                      maxWidth="Infinity"
-                      maxHeight="Infinity"/>
+        <StackPane fx:id="gridHolder" alignment="CENTER">
+
+            <GridPane fx:id="gridPane" StackPane.alignment="CENTER"/>
         </StackPane>
     </center>
 
