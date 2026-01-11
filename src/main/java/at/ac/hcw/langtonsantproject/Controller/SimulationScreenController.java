@@ -15,13 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.fxml.FXML;
 import javafx.scene.layout.*;
-import javafx.geometry.Insets;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import java.io.IOException;
-
 import java.net.URL;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -102,7 +98,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     private void MoveAnt() {
 
-
         if (stepsRemaining <= 0) {
             simLoop.stop();
             return;
@@ -149,7 +144,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
         // Adding vals.length before modulo handles negative results (turning left)
         int nextIndex = (currentAntOrientation.ordinal() + direction + vals.length) % vals.length;
         return vals[nextIndex];
-
     }
 
     private void TeleportAntToNewPos(boolean moveRight) {
@@ -180,7 +174,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
                 case left -> dy = 1;
             }
         }
-
         antXLocation += dx;
         antYLocation += dy;
 
@@ -208,7 +201,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
         antView.fitHeightProperty().bind(newCell.heightProperty().multiply(0.9));
 
         newCell.getChildren().add(antView);
-
     }
 
     private void spawnAntImage() {
@@ -326,8 +318,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
         }
     }
 
-
-
     //region SimulationControll
     public void startSimulation() {
         simLoop.play();
@@ -371,7 +361,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     @FXML
     public void exitClicked(ActionEvent actionEvent) {
-
         ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
 
