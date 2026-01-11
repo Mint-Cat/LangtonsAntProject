@@ -24,7 +24,7 @@ public class SceneControl {
     private void loadScene(Node node, String fxmlPath) {
         try {
             Stage stage = (Stage) node.getScene().getWindow();
-            // Hier nutzen wir den Pfad ausgehend vom Root-Verzeichnis
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/at/ac/hcw/langtonsantproject/" + fxmlPath));
 
             Parent root = loader.load();

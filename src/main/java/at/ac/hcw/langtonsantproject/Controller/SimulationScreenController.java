@@ -354,15 +354,14 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     @FXML
     public void exitAndSaveClicked(ActionEvent actionEvent) {
-        saveClicked(actionEvent); // Ruft deine Speicher-Logik auf
+        saveClicked(actionEvent);
 
-        // WICHTIG: Wir nutzen den Button als 'Anker', um den ClassCast-Fehler zu vermeiden!
         ChangeScene(settingButtonInSimulationScreen, StaticVarsHolder.StartScreen);
     }
 
     @FXML
     public void exitClicked(ActionEvent actionEvent) {
-        // Auch hier nutzen wir den Button, um sicher zum Start zurückzukehren
+
         ChangeScene(settingButtonInSimulationScreen, StaticVarsHolder.StartScreen);
     }
 

@@ -91,7 +91,7 @@ public class StartScreenController extends SceneControl implements Initializable
     }
     @FXML
     public void NewAntButtonClick(ActionEvent actionEvent) {
-        // 1. Bestehende Einstellungen im AppContext auf Standardwerte zurücksetzen
+
         AppContext.get().settings.width = 10;
         AppContext.get().settings.height = 10;
         AppContext.get().settings.steps = 50;
@@ -100,7 +100,6 @@ public class StartScreenController extends SceneControl implements Initializable
 
         ChangeScene(actionEvent, StaticVarsHolder.SettingsScreen);
     }
-
     @FXML
     public void LoadAntButtonClick(ActionEvent actionEvent) {
         try {
@@ -113,7 +112,7 @@ public class StartScreenController extends SceneControl implements Initializable
             // 3. Direkt zur Simulation wechseln
             ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
         } catch (IOException e) {
-            // Fehler ausgeben, falls keine Datei existiert
+            //4. Fehler ausgeben, falls keine Datei existiert
             System.err.println("Load failed: " + e.getMessage());
         }
     }

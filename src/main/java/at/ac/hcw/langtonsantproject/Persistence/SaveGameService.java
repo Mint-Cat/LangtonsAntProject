@@ -28,7 +28,6 @@ public class SaveGameService {
     public void save(String slot, SettingsState state) throws IOException {
         Files.createDirectories(dir);
 
-        // erst in Temp-Datei schreiben, dann atomar ersetzen (verhindert kaputte JSON bei Absturz- Tipp)
         Path tmp = dir.resolve(slot + ".tmp");
         Path target = file(slot);
 
