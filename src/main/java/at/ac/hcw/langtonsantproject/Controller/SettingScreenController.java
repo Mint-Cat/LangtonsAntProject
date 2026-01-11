@@ -149,8 +149,8 @@ public class SettingScreenController extends SceneControl implements Initializab
         gridPane.add(settingsLabel, 1, 0);
         gridPane.add(sizeVBox, 1, 1);
         gridPane.add(stepsVBox, 1, 2);
-        gridPane.add(speedVBOX, 1, 5);
-        gridPane.add(startingPointVBox, 1, 5);
+        gridPane.add(speedVBOX, 1, 3);
+        gridPane.add(startingPointVBox, 1, 4);
         gridPane.add(hBoxCoo, 1, 5);
         gridPane.add(StartButton, 1, 6);
     }

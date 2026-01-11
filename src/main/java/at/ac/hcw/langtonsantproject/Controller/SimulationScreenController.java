@@ -5,7 +5,9 @@ import at.ac.hcw.langtonsantproject.Misc.AntOrientation;
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
@@ -15,8 +17,11 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Priority;
-
+import javafx.stage.Stage;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import java.io.IOException;
+
 import java.net.URL;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -38,6 +43,8 @@ public class SimulationScreenController extends SceneControl implements Initiali
     @FXML
     private StackPane gridHolder;
     private DoubleBinding cellSizeBinding;
+    // Ganz oben bei deinen anderen @FXML Variablen
+    private SettingsState currentSettings;
 
     /// Runtime Vars (Here for now, can be moved somewhere else) - runtime means, only relevant during game process
     /// We initalise this each time we load the simulation Scene
@@ -72,6 +79,9 @@ public class SimulationScreenController extends SceneControl implements Initiali
     }
 
     public void runTimeInitialise(SettingsState settings) {
+        // HIER: Die Settings für den Restart speichern
+        this.currentSettings = settings;
+
         int height = (int) settings.height;
         int width = (int) settings.width;
 
@@ -316,7 +326,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
         }
     }
 
-    //endregion
+
 
     //region SimulationControll
     public void startSimulation() {
@@ -356,18 +366,41 @@ public class SimulationScreenController extends SceneControl implements Initiali
     public void exitAndSaveClicked(ActionEvent actionEvent) {
         saveClicked(actionEvent);
 
-        ChangeScene(settingButtonInSimulationScreen, StaticVarsHolder.StartScreen);
+        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
 
     @FXML
     public void exitClicked(ActionEvent actionEvent) {
 
-        ChangeScene(settingButtonInSimulationScreen, StaticVarsHolder.StartScreen);
+        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
 
+
+    @FXML
     public void settingsClickedInSimulation(ActionEvent actionEvent) {
+        stopSimulation();
+        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
 
+    @FXML
     public void restartClicked(ActionEvent actionEvent) {
+        stopSimulation();
+        try {
+            // Pfad korrigiert nach deinem Projektbaum
+            String fxmlPath = "/at/ac/hcw/langtonsantproject/simulation-screen.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            SimulationScreenController controller = loader.getController();
+            if (this.currentSettings != null) {
+                controller.runTimeInitialise(this.currentSettings);
+            }
+
+            Stage stage = (Stage) gridPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
