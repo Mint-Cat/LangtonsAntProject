@@ -95,7 +95,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
         antXLocation = settings.antStartPointX;
         antYLocation = settings.antStartPointY;
 
-        buildGridUI(width, height);
+        buildGridUI(width, height); // Erst das Gitter bauen
         redrawAll();
         spawnAntImage();
     }
@@ -213,20 +213,21 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     private void spawnAntImage() {
         Image img = new Image(
-                Objects.requireNonNull(getClass().getResourceAsStream("/at/ac/hcw/langtonsantproject/pictures/ANT.png"))
+                Objects.requireNonNull(getClass().getResourceAsStream("/at/ac/hcw/langtonsantproject/pictures/ANT.png")),
+                10, 10, true, true
         );
-
         antView = new ImageView(img);
         antView.setPreserveRatio(true);
 
-        //Make it scale with the cell size
+
         StackPane startCell = cellPanes[antYLocation][antXLocation];
         antView.fitWidthProperty().bind(startCell.widthProperty().multiply(0.9));
         antView.fitHeightProperty().bind(startCell.heightProperty().multiply(0.9));
 
         startCell.getChildren().add(antView);
 
-        moveAntImageTo(antXLocation, antYLocation);
+        updateAntRotation();
+
     }
 
     private void updateAntRotation() {
@@ -238,7 +239,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
         };
         antView.setRotate(angle);
     }
-    //endregion
 
     //region Grid Builder
     private void buildGridUI(int width, int height) {
@@ -386,7 +386,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
     public void restartClicked(ActionEvent actionEvent) {
         stopSimulation();
         try {
-            // Pfad korrigiert nach deinem Projektbaum
+
             String fxmlPath = "/at/ac/hcw/langtonsantproject/simulation-screen.fxml";
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
