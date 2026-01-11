@@ -10,7 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -91,12 +90,10 @@ public class StartScreenController extends SceneControl implements Initializable
     }
     @FXML
     public void NewAntButtonClick(ActionEvent actionEvent) {
-
         AppContext.get().settings.width = 10;
         AppContext.get().settings.height = 10;
         AppContext.get().settings.steps = 50;
         AppContext.get().settings.speed = 50;
-
 
         ChangeScene(actionEvent, StaticVarsHolder.SettingsScreen);
     }
@@ -126,8 +123,6 @@ public class StartScreenController extends SceneControl implements Initializable
         } catch (IOException e) {
             System.err.println("Delete failed: " + e.getMessage());
         }
-
-
     }
 @FXML
 public void SaveAntButtonClick(ActionEvent actionEvent) {
