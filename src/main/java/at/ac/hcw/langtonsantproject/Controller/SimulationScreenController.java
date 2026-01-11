@@ -2,6 +2,7 @@ package at.ac.hcw.langtonsantproject.Controller;
 
 import at.ac.hcw.langtonsantproject.AppContext;
 import at.ac.hcw.langtonsantproject.Misc.AntOrientation;
+import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -14,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Priority;
+
+import java.io.IOException;
 import java.net.URL;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -32,7 +35,8 @@ public class SimulationScreenController extends SceneControl implements Initiali
     public MenuButton settingButtonInSimulationScreen;
     @FXML
     private GridPane gridPane;
-    @FXML private StackPane gridHolder;
+    @FXML
+    private StackPane gridHolder;
     private DoubleBinding cellSizeBinding;
 
     /// Runtime Vars (Here for now, can be moved somewhere else) - runtime means, only relevant during game process
@@ -54,11 +58,10 @@ public class SimulationScreenController extends SceneControl implements Initiali
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SettingsState settings = AppContext.get().settings;
-        if (settings == null){
+        if (settings == null) {
             return;
         }
 
-        // Hier rufen wir die Methode nur auf!
         runTimeInitialise(settings);
 
         // Timeline Stuff
@@ -66,18 +69,18 @@ public class SimulationScreenController extends SceneControl implements Initiali
         simLoop.setCycleCount(Timeline.INDEFINITE);
 
         startSimulation();
-    } // <--- DIESE Klammer beendet initialize. Sie muss VOR runTimeInitialise stehen!
+    }
 
     public void runTimeInitialise(SettingsState settings) {
-        int height = (int)settings.height;
-        int width = (int)settings.width;
+        int height = (int) settings.height;
+        int width = (int) settings.width;
 
-        // Jetzt erkennt er stepsRemaining, weil es oben in der Klasse steht
+
         this.stepsRemaining = (int) settings.steps;
 
         antGrid = new boolean[height][width];
         cellRects = new Rectangle[height][width];
-        cellPanes  = new StackPane[height][width];
+        cellPanes = new StackPane[height][width];
 
         antXLocation = settings.antStartPointX;
         antYLocation = settings.antStartPointY;
@@ -89,14 +92,12 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     private void MoveAnt() {
 
-            // PRÜFUNG: Wenn keine Schritte mehr übrig sind, sofort stoppen!
-            if (stepsRemaining <= 0) {
-                simLoop.stop();
-                return;
-            }
 
-            // 1. Check current color ...
-            boolean isBlack = antGrid[antYLocation][antXLocation];
+        if (stepsRemaining <= 0) {
+            simLoop.stop();
+            return;
+        }
+        boolean isBlack = antGrid[antYLocation][antXLocation];
 
         // 2. Turn (White/False -> Right, Black/True -> Left)
         currentAntOrientation = rotate(isBlack ? -1 : 1);
@@ -109,9 +110,9 @@ public class SimulationScreenController extends SceneControl implements Initiali
         int dx = 0;
         int dy = 0;
         switch (currentAntOrientation) {
-            case up    -> dy = -1;
-            case down  -> dy = 1;
-            case left  -> dx = -1;
+            case up -> dy = -1;
+            case down -> dy = 1;
+            case left -> dx = -1;
             case right -> dx = 1;
         }
 
@@ -130,7 +131,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
         moveAntImageTo(antXLocation, antYLocation);
 
         stepsRemaining--;
-        simulationScreen.setText("Schritte übrig: " + stepsRemaining);
+        simulationScreen.setText("Steps Remaining: " + stepsRemaining);
     }
 
     private AntOrientation rotate(int direction) {
@@ -140,30 +141,28 @@ public class SimulationScreenController extends SceneControl implements Initiali
         return vals[nextIndex];
 
     }
-    private void TeleportAntToNewPos(boolean moveRight){
+
+    private void TeleportAntToNewPos(boolean moveRight) {
         int dx = 0;
         int dy = 0;
 
+        // edge check: stop sim if out of bounds
+        if (antXLocation < 0 || antXLocation >= antGrid[0].length
+                || antYLocation < 0 || antYLocation >= antGrid.length) {
 
-            // edge check: stop sim if out of bounds
-            if (antXLocation < 0 || antXLocation >= antGrid[0].length
-                    || antYLocation < 0 || antYLocation >= antGrid.length) {
+            System.out.println("[STOP ] out of bounds!");
+            if (simLoop != null) simLoop.stop();
+            return;
+        }
 
-                System.out.println("[STOP ] out of bounds!");
-                if (simLoop != null) simLoop.stop();
-                return;
-            }
-
-
-        if (moveRight){
+        if (moveRight) {
             switch (currentAntOrientation) {
                 case up -> dx = -1;
                 case right -> dy = 1;
                 case down -> dx = 1;
                 case left -> dy = -1;
             }
-        }
-        else {
+        } else {
             switch (currentAntOrientation) {
                 case up -> dx = 1;
                 case right -> dy = -1;
@@ -181,6 +180,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
             return;
         }
     }
+
     private void moveAntImageTo(int x, int y) {
         if (antView == null) return;
 
@@ -200,6 +200,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
         newCell.getChildren().add(antView);
 
     }
+
     private void spawnAntImage() {
         Image img = new Image(
                 Objects.requireNonNull(getClass().getResourceAsStream("/at/ac/hcw/langtonsantproject/pictures/ANT.png"))
@@ -215,8 +216,9 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
         startCell.getChildren().add(antView);
 
-        moveAntImageTo(antXLocation,antYLocation);
+        moveAntImageTo(antXLocation, antYLocation);
     }
+
     private void updateAntRotation() {
         double angle = switch (currentAntOrientation) {
             case up -> 0;
@@ -296,10 +298,12 @@ public class SimulationScreenController extends SceneControl implements Initiali
             }
         }
     }
+
     public void toggleCell(int row, int col) {
         antGrid[row][col] = !antGrid[row][col];
         updateCell(row, col);
     }
+
     private void updateCell(int row, int col) {
         cellRects[row][col].setFill(antGrid[row][col] ? Color.BLACK : Color.WHITE);
     }
@@ -326,16 +330,45 @@ public class SimulationScreenController extends SceneControl implements Initiali
     public void stopSimulation() {
         simLoop.stop();
     }
-    //endregion
 
-    //region Button Funcs
+    @FXML
     public void pauseClicked(ActionEvent actionEvent) {
-        //TODO: Pause Simulation - Bruno
         pauseSimulation();
     }
-    public void saveClicked(ActionEvent actionEvent) {
-        //TODO: Save Simulation, all relevant Vars need to be saved - Meli & Lika
-    }
-    //endregion
 
+    @FXML
+    public void saveClicked(ActionEvent actionEvent) {
+        try {
+            // Holt die aktuellen Settings aus dem AppContext
+            SettingsState stateToSave = AppContext.get().settings;
+
+            // Speichert sie in die Datei "default.json"
+            AppContext.get().saveService.save("default", stateToSave);
+
+            System.out.println("Simulation erfolgreich gespeichert!");
+        } catch (IOException e) {
+            System.err.println("Fehler beim Speichern: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void exitAndSaveClicked(ActionEvent actionEvent) {
+        saveClicked(actionEvent); // Ruft deine Speicher-Logik auf
+
+        // WICHTIG: Wir nutzen den Button als 'Anker', um den ClassCast-Fehler zu vermeiden!
+        ChangeScene(settingButtonInSimulationScreen, StaticVarsHolder.StartScreen);
+    }
+
+    @FXML
+    public void exitClicked(ActionEvent actionEvent) {
+        // Auch hier nutzen wir den Button, um sicher zum Start zurückzukehren
+        ChangeScene(settingButtonInSimulationScreen, StaticVarsHolder.StartScreen);
+    }
+
+    public void settingsClickedInSimulation(ActionEvent actionEvent) {
+    }
+
+    public void restartClicked(ActionEvent actionEvent) {
+    }
 }

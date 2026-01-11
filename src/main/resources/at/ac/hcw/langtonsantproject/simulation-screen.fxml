@@ -16,13 +16,13 @@
 
             <Pane HBox.hgrow="ALWAYS"/>
 
-            <MenuButton fx:id="settingButtonInSimulationScreen" mnemonicParsing="false" text="Settings">
+            <MenuButton fx:id="settingButtonInSimulationScreen" mnemonicParsing="false" text="Options">
                 <items>
-                    <MenuItem mnemonicParsing="false" text="Restart"/>
-                    <MenuItem mnemonicParsing="false" text="Settings"/>
-                    <MenuItem mnemonicParsing="false" text="Save"/>
-                    <MenuItem mnemonicParsing="false" text="Exit &amp; Save"/>
-                    <MenuItem mnemonicParsing="false" text="Exit"/>
+                    <MenuItem onAction="#restartClicked" text="Restart" />
+                    <MenuItem onAction="#settingsClickedInSimulation" text="Settings" />
+                    <MenuItem onAction="#saveClicked" text="Save" />
+                    <MenuItem onAction="#exitAndSaveClicked" text="Exit &amp; Save" />
+                    <MenuItem onAction="#exitClicked" text="Exit" />
                 </items>
             </MenuButton>
 
@@ -32,7 +32,6 @@
 
     <center>
         <StackPane fx:id="gridHolder" alignment="CENTER">
-
             <GridPane fx:id="gridPane" StackPane.alignment="CENTER"/>
         </StackPane>
     </center>
