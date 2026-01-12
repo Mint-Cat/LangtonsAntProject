@@ -331,9 +331,18 @@ public class SimulationScreenController extends SceneControl implements Initiali
         simLoop.stop();
     }
 
+
     @FXML
     public void pauseClicked(ActionEvent actionEvent) {
-        pauseSimulation();
+
+        if (simLoop.getStatus() == Timeline.Status.RUNNING) {
+            pauseSimulation();
+
+        } else {
+
+            startSimulation();
+
+        }
     }
 
     @FXML
