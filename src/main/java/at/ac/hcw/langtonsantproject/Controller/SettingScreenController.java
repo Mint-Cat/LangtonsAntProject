@@ -67,12 +67,15 @@ public class SettingScreenController extends SceneControl implements Initializab
         responsive();
 
         // Standardwerte definieren
-        int widthDefault = 10;
-        int heighDefault = 10;
-        int stepDefault = 50;
-        int speedDefault = 50;
-        int posXDefault = 5;
-        int posYDefault = 5;
+        SettingsState s = AppContext.get().settings;
+
+        int widthDefault = (s.width > 0) ? (int) s.width : 10;
+        int heighDefault = (s.height > 0) ? (int) s.height : 10;
+        int stepDefault = (s.steps > 0) ? s.steps : 50;
+        int speedDefault = (s.speed > 0) ? (int) s.speed : 50;
+
+        int posXDefault = s.antStartPointX;
+        int posYDefault = s.antStartPointY;
 
         // --- WIDTH ---
         Slider widthSlider = makeSlider(widthDefault, 1, 20);

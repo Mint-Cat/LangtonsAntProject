@@ -4,6 +4,7 @@ import at.ac.hcw.langtonsantproject.AppContext;
 import at.ac.hcw.langtonsantproject.Misc.AntOrientation;
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
+import javafx.animation.Animation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,11 +30,15 @@ import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.application.Platform;
+import javafx.scene.control.Button;
 
 public class SimulationScreenController extends SceneControl implements Initializable {
 
     public Label simulationScreen;
     public MenuButton settingButtonInSimulationScreen;
+    @FXML
+    private Button pauseButton;
     @FXML
     private GridPane gridPane;
     @FXML
@@ -58,6 +63,8 @@ public class SimulationScreenController extends SceneControl implements Initiali
     private Timeline simLoop;
     private ImageView antView;
 
+    //Zugriff für Pause Button
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SettingsState settings = AppContext.get().settings;
@@ -68,10 +75,18 @@ public class SimulationScreenController extends SceneControl implements Initiali
         runTimeInitialise(settings);
 
         // Timeline Stuff
-        simLoop = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> MoveAnt()));
+        double speed = settings.speed;
+        if (speed <= 0) speed = 50;
+
+        double seconds = 1.05 - (speed / 100);
+        seconds = Math.max(0.05, seconds);
+
+        simLoop = new Timeline(new KeyFrame(Duration.seconds(seconds), e -> MoveAnt()));
         simLoop.setCycleCount(Timeline.INDEFINITE);
 
-        startSimulation();
+        //Startet so erst wenn die Scene fertig gerendert ist
+        Platform.runLater(this::startSimulation);
+        System.out.println("pauseButton injected? " + (pauseButton != null));
     }
 
     public void runTimeInitialise(SettingsState settings) {
@@ -337,10 +352,10 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
         if (simLoop.getStatus() == Timeline.Status.RUNNING) {
             pauseSimulation();
-
-        } else {
-
+            if (pauseButton != null) pauseButton.setText("Resume");
+        }else {
             startSimulation();
+            if (pauseButton != null) pauseButton.setText("Pause");
 
         }
     }
@@ -401,4 +416,14 @@ public class SimulationScreenController extends SceneControl implements Initiali
             e.printStackTrace();
         }
     }
+    @FXML
+    public void stepClicked(ActionEvent actionEvent) {
+        //Falls Sim läuft = pause
+        if (simLoop != null && simLoop.getStatus() == Timeline.Status.RUNNING) {
+            return;
+        }
+        MoveAnt();
+    }
 }
+
+

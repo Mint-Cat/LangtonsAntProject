@@ -104,16 +104,16 @@ public class StartScreenController extends SceneControl implements Initializable
             SettingsState loadedState = AppContext.get().saveService.load("default");
 
             // 2. Die geladenen Daten in den zentralen AppContext übertragen
-            AppContext.get().settings = loadedState;
+            loadedState.LoadedIn = true;
 
             // 3. Direkt zur Simulation wechseln
-            ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
-        } catch (IOException e) {
+            AppContext.get().settings = loadedState;
             //4. Fehler ausgeben, falls keine Datei existiert
+            ChangeScene(actionEvent, StaticVarsHolder.SettingsScreen);
+        } catch (IOException e) {
             System.err.println("Load failed: " + e.getMessage());
         }
     }
-
     @FXML
     public void DeleteAntButtonClick(ActionEvent actionEvent) {
         try {

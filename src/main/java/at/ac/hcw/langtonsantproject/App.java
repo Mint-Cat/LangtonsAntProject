@@ -15,10 +15,10 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
 
         // OPTIONAL: nur zum Testen (kannst du später wieder löschen)
-        testSaveLoad2();
-
+        if (Boolean.getBoolean("devMode")) {
+            testSaveLoad2();
+        }
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(StaticVarsHolder.StartScreen));
-        fxmlLoader.getController();
         Scene scene = new Scene(fxmlLoader.load(), 720, 480);
 
         stage.setTitle("Langton's Ant Simulation");
