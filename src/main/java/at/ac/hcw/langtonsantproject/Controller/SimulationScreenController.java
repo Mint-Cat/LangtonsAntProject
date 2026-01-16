@@ -11,8 +11,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -28,12 +28,13 @@ import java.util.ResourceBundle;
 public class SimulationScreenController extends SceneControl implements Initializable {
 
     @FXML public Label simulationScreen;
-    @FXML public MenuButton settingButtonInSimulationScreen;
+    //@FXML public MenuButton settingButtonInSimulationScreen;
+    @FXML public Button pauseButton;
     @FXML private GridPane gridPane;
-    @FXML private StackPane gridHolder;
+    //@FXML private StackPane gridHolder;
 
     private SettingsState currentSettings;
-    private double fixedCellSize;
+    private double fixedCellSize; // Fixe Größe
 
     private boolean[][] antGrid;
     private Rectangle[][] cellRects;
@@ -51,6 +52,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
         SettingsState settings = AppContext.get().settings;
         if (settings == null) return;
 
+        // CSS laden
         String css = getClass().getResource("/at/ac/hcw/langtonsantproject/style.css").toExternalForm();
         Platform.runLater(() -> {
             if (gridPane.getScene() != null) {
@@ -190,36 +192,39 @@ public class SimulationScreenController extends SceneControl implements Initiali
     }
 
     public void startSimulation() { simLoop.play(); }
-    public void pauseSimulation() { simLoop.pause(); }
+    public void pauseSimulation() {simLoop.pause(); }
     public void stopSimulation() { simLoop.stop(); }
 
     @FXML public void pauseClicked(ActionEvent e) {
         if (simLoop.getStatus() == Timeline.Status.RUNNING) pauseSimulation(); else startSimulation();
+        if (pauseButton.getText().equals("Pause")){
+            pauseButton.setText("Resume");
+        } else {
+            pauseButton.setText("Pause");
+        }
     }
 
     @FXML public void saveClicked(ActionEvent e) {
-        try { AppContext.get().saveService.save("default", AppContext.get().settings); } catch (IOException ex) { ex.printStackTrace(); }
-    }
-
-    @FXML public void exitAndSaveClicked(ActionEvent actionEvent) {
-        saveClicked(actionEvent);
-        stopSimulation();
-        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
+        try { AppContext.get().saveService.save("default", AppContext.get().settings); }
+        catch (IOException ex) { ex.printStackTrace(); }
     }
 
     @FXML public void exitClicked(ActionEvent e) {
-        stopSimulation();
-        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
-    }
-
-    @FXML public void settingsClickedInSimulation(ActionEvent e) {
-        stopSimulation();
-        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
+        stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
 
     @FXML public void restartClicked(ActionEvent e) {
         stopSimulation();
-        // RESTART-FIX: Nutzt gridPane statt ActionEvent
         ChangeScene(gridPane, StaticVarsHolder.SimulationScreen);
+        startSimulation();
+    }
+
+    @FXML public void settingsClickedInSimulation(ActionEvent e) {
+        stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.SettingsScreen);
+    }
+
+    @FXML void exitAndSaveClicked(ActionEvent e) {
+        try { AppContext.get().saveService.save("default", AppContext.get().settings); } catch (IOException ex) { ex.printStackTrace(); }
+        stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
 }

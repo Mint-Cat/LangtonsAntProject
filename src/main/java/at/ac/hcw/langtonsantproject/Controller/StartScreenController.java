@@ -8,26 +8,18 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class StartScreenController extends SceneControl implements Initializable {
 
     // Diese Variablen sind mit deiner .fxml Datei verknüpft
-    @FXML
-    public GridPane gridPane;
-    @FXML
-    public Label NameLabel;
-    @FXML
-    public Button NewAntButton;
-    @FXML
-    public Button LoadAntButton;
-    @FXML
-    public Button DeleteAntButton;
+    @FXML public GridPane gridPane;
+    @FXML public Label WarningLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -36,7 +28,7 @@ public class StartScreenController extends SceneControl implements Initializable
         */
 
         // Das dunkelrote Design (CSS) laden
-        String css = getClass().getResource("/at/ac/hcw/langtonsantproject/style.css").toExternalForm();
+        String css = Objects.requireNonNull(getClass().getResource("/at/ac/hcw/langtonsantproject/style.css")).toExternalForm();
 
         // Wir warten kurz, bis das Fenster offen ist, und wenden dann das Design an
         Platform.runLater(() -> {
@@ -49,12 +41,6 @@ public class StartScreenController extends SceneControl implements Initializable
 
     @FXML
     public void NewAntButtonClick(ActionEvent actionEvent) {
-        // Standardwerte setzen
-        AppContext.get().settings.width = 10;
-        AppContext.get().settings.height = 10;
-        AppContext.get().settings.steps = 50;
-        AppContext.get().settings.speed = 50;
-
         // Zum Einstellungs-Bildschirm wechseln
         ChangeScene(actionEvent, StaticVarsHolder.SettingsScreen);
     }
@@ -63,13 +49,13 @@ public class StartScreenController extends SceneControl implements Initializable
     public void LoadAntButtonClick(ActionEvent actionEvent) {
         try {
             // Speicherstand laden
-            SettingsState loadedState = AppContext.get().saveService.load("default");
-            AppContext.get().settings = loadedState;
+            AppContext.get().settings = AppContext.get().saveService.load("default");
 
-            // Direkt zur Simulation flitzen
+            // Direkt zur Simulation
             ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
         } catch (IOException e) {
             System.err.println("Kein Speicherstand gefunden: " + e.getMessage());
+            WarningLabel.setText("Kein Speicherstand gefunden!");
         }
     }
 
@@ -79,8 +65,11 @@ public class StartScreenController extends SceneControl implements Initializable
             // Speicherstand löschen
             AppContext.get().saveService.delete("default");
             System.out.println("Speicherstand erfolgreich gelöscht.");
+            WarningLabel.setText("Speicherstand erfolgreich gelöscht!");
+            AppContext.get().setFirstStart(true);
         } catch (IOException e) {
             System.err.println("Löschen fehlgeschlagen: " + e.getMessage());
+            WarningLabel.setText("Löschen fehlgeschlagen!");
         }
     }
 }

@@ -22,6 +22,7 @@
                 <Button onAction="#NewAntButtonClick" prefWidth="250.0" text="New Ant" />
                 <Button onAction="#LoadAntButtonClick" prefWidth="250.0" text="Load Ant" />
                 <Button onAction="#DeleteAntButtonClick" prefWidth="250.0" text="Delete Ant" />
+                <Label fx:id="WarningLabel" text="" styleClass="setting-label"/>
             </children>
         </VBox>
     </children>

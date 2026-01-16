@@ -24,7 +24,7 @@
                         <MenuItem onAction="#exitClicked" text="Exit" />
                     </items>
                 </MenuButton>
-                <Button onAction="#pauseClicked" text="Pause" styleClass="tool-button" prefWidth="80.0" />
+                <Button fx:id="pauseButton" onAction="#pauseClicked" text="Pause" styleClass="tool-button"/>
             </children>
         </HBox>
     </top>
