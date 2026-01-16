@@ -4,116 +4,126 @@ import at.ac.hcw.langtonsantproject.AppContext;
 import at.ac.hcw.langtonsantproject.Misc.AntOrientation;
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.fxml.FXML;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import java.io.IOException;
-import java.net.URL;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.util.Duration;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class SimulationScreenController extends SceneControl implements Initializable {
 
-    public Label simulationScreen;
-    public MenuButton settingButtonInSimulationScreen;
-    @FXML
-    private GridPane gridPane;
-    @FXML
-    private StackPane gridHolder;
-    private DoubleBinding cellSizeBinding;
-    // Ganz oben bei deinen anderen @FXML Variablen
+    @FXML public Label simulationScreen;
+    @FXML private GridPane gridPane;
+    @FXML private StackPane gridHolder;
+
     private SettingsState currentSettings;
+    private double fixedCellSize; // FESTE Größe statt Binding
 
-    /// Runtime Vars (Here for now, can be moved somewhere else) - runtime means, only relevant during game process
-    /// We initalise this each time we load the simulation Scene
-    boolean[][] antGrid; //False -> untouched, default false
-    private Rectangle[][] cellRects;  //UI references
-    private StackPane[][] cellPanes; // UI cell containers (for PNG, etc.)
-    private static final double CELL_SIZE = 50;
+    private boolean[][] antGrid;
+    private Rectangle[][] cellRects;
+    private StackPane[][] cellPanes;
     private int stepsRemaining;
-
-    public int antXLocation;
-    public int antYLocation;
-    public AntOrientation currentAntOrientation = AntOrientation.up;
-
-
+    private int antXLocation, antYLocation;
+    private AntOrientation currentAntOrientation = AntOrientation.up;
     private Timeline simLoop;
     private ImageView antView;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SettingsState settings = AppContext.get().settings;
-        if (settings == null) {
-            return;
-        }
+        if (settings == null) return;
+
+        // CSS laden
+        String css = getClass().getResource("/at/ac/hcw/langtonsantproject/style.css").toExternalForm();
+        Platform.runLater(() -> {
+            if (gridPane.getScene() != null) {
+                gridPane.getScene().getStylesheets().add(css);
+            }
+        });
 
         runTimeInitialise(settings);
 
-        // Timeline Stuff
-        simLoop = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> MoveAnt()));
+        // Geschwindigkeit nutzen
+        double speed = settings.speed <= 0 ? 50 : settings.speed;
+        simLoop = new Timeline(new KeyFrame(Duration.millis(1000.0 / speed), e -> MoveAnt()));
         simLoop.setCycleCount(Timeline.INDEFINITE);
-
         startSimulation();
     }
 
     public void runTimeInitialise(SettingsState settings) {
-        // HIER: Die Settings für den Restart speichern
         this.currentSettings = settings;
-
-        int height = (int) settings.height;
-        int width = (int) settings.width;
-
-
+        int w = (int) settings.width;
+        int h = (int) settings.height;
         this.stepsRemaining = (int) settings.steps;
 
-        antGrid = new boolean[height][width];
-        cellRects = new Rectangle[height][width];
-        cellPanes = new StackPane[height][width];
-
+        antGrid = new boolean[h][w];
+        cellRects = new Rectangle[h][w];
+        cellPanes = new StackPane[h][w];
         antXLocation = settings.antStartPointX;
         antYLocation = settings.antStartPointY;
 
-        buildGridUI(width, height); // Erst das Gitter bauen
+        // Zellengröße EINMALIG berechnen (Fenster ist 800x600)
+        double availW = 740.0 / w;
+        double availH = 480.0 / h;
+        this.fixedCellSize = Math.min(availW, availH);
+        if (this.fixedCellSize > 40) this.fixedCellSize = 40; // Max Größe
+
+        buildGridUI(w, h);
         redrawAll();
         spawnAntImage();
+        simulationScreen.setText("Steps Remaining: " + stepsRemaining);
+    }
+
+    private void buildGridUI(int width, int height) {
+        gridPane.getChildren().clear();
+        gridPane.getColumnConstraints().clear();
+        gridPane.getRowConstraints().clear();
+
+        for (int col = 0; col < width; col++) {
+            gridPane.getColumnConstraints().add(new ColumnConstraints(fixedCellSize));
+        }
+        for (int row = 0; row < height; row++) {
+            gridPane.getRowConstraints().add(new RowConstraints(fixedCellSize));
+        }
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                StackPane cell = new StackPane();
+                Rectangle r = new Rectangle(fixedCellSize, fixedCellSize);
+                r.setStroke(Color.LIGHTGRAY);
+                r.setFill(Color.WHITE);
+
+                cell.getChildren().add(r);
+                cellPanes[row][col] = cell;
+                cellRects[row][col] = r;
+                gridPane.add(cell, col, row);
+            }
+        }
     }
 
     private void MoveAnt() {
+        if (stepsRemaining <= 0) { stopSimulation(); return; }
 
-        if (stepsRemaining <= 0) {
-            simLoop.stop();
-            return;
-        }
         boolean isBlack = antGrid[antYLocation][antXLocation];
-
-        // 2. Turn (White/False -> Right, Black/True -> Left)
         currentAntOrientation = rotate(isBlack ? -1 : 1);
         updateAntRotation();
-
-        // 3. Flip the color of the square we are standing on
         toggleCell(antYLocation, antXLocation);
 
-        // 4. Move forward in the NEW direction
-        int dx = 0;
-        int dy = 0;
+        int dx = 0, dy = 0;
         switch (currentAntOrientation) {
             case up -> dy = -1;
             case down -> dy = 1;
@@ -124,281 +134,71 @@ public class SimulationScreenController extends SceneControl implements Initiali
         int nextX = antXLocation + dx;
         int nextY = antYLocation + dy;
 
-        // 5. Bounds Check
         if (nextX < 0 || nextX >= antGrid[0].length || nextY < 0 || nextY >= antGrid.length) {
-            System.out.println("Out of bounds!");
             stopSimulation();
             return;
         }
-        // 6. Update Position
+
         antXLocation = nextX;
         antYLocation = nextY;
         moveAntImageTo(antXLocation, antYLocation);
-
         stepsRemaining--;
         simulationScreen.setText("Steps Remaining: " + stepsRemaining);
     }
 
-    private AntOrientation rotate(int direction) {
-        AntOrientation[] vals = AntOrientation.values();
-        // Adding vals.length before modulo handles negative results (turning left)
-        int nextIndex = (currentAntOrientation.ordinal() + direction + vals.length) % vals.length;
-        return vals[nextIndex];
-    }
-
-    private void TeleportAntToNewPos(boolean moveRight) {
-        int dx = 0;
-        int dy = 0;
-
-        // edge check: stop sim if out of bounds
-        if (antXLocation < 0 || antXLocation >= antGrid[0].length
-                || antYLocation < 0 || antYLocation >= antGrid.length) {
-
-            System.out.println("[STOP ] out of bounds!");
-            if (simLoop != null) simLoop.stop();
-            return;
-        }
-
-        if (moveRight) {
-            switch (currentAntOrientation) {
-                case up -> dx = -1;
-                case right -> dy = 1;
-                case down -> dx = 1;
-                case left -> dy = -1;
-            }
-        } else {
-            switch (currentAntOrientation) {
-                case up -> dx = 1;
-                case right -> dy = -1;
-                case down -> dx = -1;
-                case left -> dy = 1;
-            }
-        }
-        antXLocation += dx;
-        antYLocation += dy;
-
-        //edge check: stop sim if out of bounds
-        if (antXLocation < 0 || antXLocation >= antGrid[0].length || antYLocation < 0 || antYLocation >= antGrid.length) {
-            if (simLoop != null) simLoop.stop();
-            return;
-        }
-    }
-
     private void moveAntImageTo(int x, int y) {
         if (antView == null) return;
-
-        // Remove from previous cell (if attached)
-        if (antView.getParent() instanceof Pane p) {
-            p.getChildren().remove(antView);
-        }
-
-        StackPane newCell = cellPanes[y][x];
-
-        // Rebind fit size to the new cell so it keeps scaling
-        antView.fitWidthProperty().unbind();
-        antView.fitHeightProperty().unbind();
-        antView.fitWidthProperty().bind(newCell.widthProperty().multiply(0.9));
-        antView.fitHeightProperty().bind(newCell.heightProperty().multiply(0.9));
-
-        newCell.getChildren().add(antView);
+        ((Pane)antView.getParent()).getChildren().remove(antView);
+        cellPanes[y][x].getChildren().add(antView);
     }
 
     private void spawnAntImage() {
-        Image img = new Image(
-                Objects.requireNonNull(getClass().getResourceAsStream("/at/ac/hcw/langtonsantproject/pictures/ANT.png")),
-                50, 50, true, true
-        );
+        Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/at/ac/hcw/langtonsantproject/Pictures/ANT.png")));
         antView = new ImageView(img);
+        antView.setFitWidth(fixedCellSize * 0.8);
+        antView.setFitHeight(fixedCellSize * 0.8);
         antView.setPreserveRatio(true);
-
-
-        StackPane startCell = cellPanes[antYLocation][antXLocation];
-        antView.fitWidthProperty().bind(startCell.widthProperty().multiply(0.9));
-        antView.fitHeightProperty().bind(startCell.heightProperty().multiply(0.9));
-
-        startCell.getChildren().add(antView);
-
+        cellPanes[antYLocation][antXLocation].getChildren().add(antView);
         updateAntRotation();
-
     }
 
+    private void updateCell(int row, int col) {
+        // KLASSISCH SCHWARZ / WEISS
+        cellRects[row][col].setFill(antGrid[row][col] ? Color.BLACK : Color.WHITE);
+    }
+
+    // --- Hilfsmethoden ---
+    private AntOrientation rotate(int direction) {
+        AntOrientation[] vals = AntOrientation.values();
+        return vals[(currentAntOrientation.ordinal() + direction + vals.length) % vals.length];
+    }
     private void updateAntRotation() {
-        double angle = switch (currentAntOrientation) {
-            case up -> 0;
-            case right -> 90;
-            case down -> 180;
-            case left -> 270;
-        };
-        antView.setRotate(angle);
+        antView.setRotate(switch (currentAntOrientation) {
+            case up -> 0; case right -> 90; case down -> 180; case left -> 270;
+        });
     }
-
-    //region Grid Builder
-    private void buildGridUI(int width, int height) {
-        gridPane.getChildren().clear();
-        gridPane.getRowConstraints().clear();
-        gridPane.getColumnConstraints().clear();
-
-        double gap = 1;
-        gridPane.setHgap(gap);
-        gridPane.setVgap(gap);
-
-        // Cell size = min(availableWidth/cols, availableHeight/rows)
-        // subtract gaps so it doesn't overflow
-        cellSizeBinding = Bindings.createDoubleBinding(() -> {
-            double availableW = gridHolder.getWidth() - (width - 1) * gridPane.getHgap();
-            double availableH = gridHolder.getHeight() - (height - 1) * gridPane.getVgap();
-            if (availableW <= 0 || availableH <= 0) return 1.0;
-
-            double sizeW = availableW / width;
-            double sizeH = availableH / height;
-
-            // Optional: clamp so it doesn't become ridiculous
-            double cell = Math.min(sizeW, sizeH);
-            cell = Math.max(2, Math.min(cell, 40)); // min 2px, max 40px (tweak/remove)
-            return cell;
-        }, gridHolder.widthProperty(), gridHolder.heightProperty());
-
-        // Columns
-        for (int col = 0; col < width; col++) {
-            ColumnConstraints cc = new ColumnConstraints();
-            cc.prefWidthProperty().bind(cellSizeBinding);
-            cc.minWidthProperty().bind(cellSizeBinding);
-            cc.maxWidthProperty().bind(cellSizeBinding);
-            gridPane.getColumnConstraints().add(cc);
-        }
-
-        // Rows
-        for (int row = 0; row < height; row++) {
-            RowConstraints rc = new RowConstraints();
-            rc.prefHeightProperty().bind(cellSizeBinding);
-            rc.minHeightProperty().bind(cellSizeBinding);
-            rc.maxHeightProperty().bind(cellSizeBinding);
-            gridPane.getRowConstraints().add(rc);
-        }
-
-        // Create Cells
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-
-                StackPane cell = new StackPane();
-                cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-                Rectangle r = new Rectangle();
-                r.setStroke(Color.gray(0.7));
-                r.setFill(Color.WHITE);
-
-                // Scale rectangle to cell size
-                r.widthProperty().bind(cellSizeBinding);
-                r.heightProperty().bind(cellSizeBinding);
-
-                cell.getChildren().add(r);
-
-                cellPanes[row][col] = cell;
-                cellRects[row][col] = r;
-
-                gridPane.add(cell, col, row);
-            }
-        }
-    }
-
     public void toggleCell(int row, int col) {
         antGrid[row][col] = !antGrid[row][col];
         updateCell(row, col);
     }
-
-    private void updateCell(int row, int col) {
-        cellRects[row][col].setFill(antGrid[row][col] ? Color.BLACK : Color.WHITE);
-    }
-
     private void redrawAll() {
-        for (int row = 0; row < antGrid.length; row++) {
-            for (int col = 0; col < antGrid[row].length; col++) {
-                updateCell(row, col);
-            }
-        }
+        for (int r = 0; r < antGrid.length; r++)
+            for (int c = 0; c < antGrid[r].length; c++) updateCell(r, c);
     }
+    public void startSimulation() { simLoop.play(); }
+    public void stopSimulation() { simLoop.stop(); }
+    public void pauseSimulation() { simLoop.pause(); }
 
-    //region SimulationControll
-    public void startSimulation() {
-        simLoop.play();
+    @FXML public void pauseClicked(ActionEvent e) {
+        if (simLoop.getStatus() == Timeline.Status.RUNNING) pauseSimulation(); else startSimulation();
     }
-
-    public void pauseSimulation() {
-        simLoop.pause();
+    @FXML public void saveClicked(ActionEvent e) {
+        try { AppContext.get().saveService.save("default", AppContext.get().settings); } catch (IOException ex) { ex.printStackTrace(); }
     }
+    @FXML public void exitClicked(ActionEvent e) { stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen); }
+    @FXML public void restartClicked(ActionEvent e) { stopSimulation(); ChangeScene(e, StaticVarsHolder.SimulationScreen); }
+    @FXML public void settingsClickedInSimulation(ActionEvent e) { stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen); }
 
-    public void stopSimulation() {
-        simLoop.stop();
-    }
-
-
-    @FXML
-    public void pauseClicked(ActionEvent actionEvent) {
-
-        if (simLoop.getStatus() == Timeline.Status.RUNNING) {
-            pauseSimulation();
-
-        } else {
-
-            startSimulation();
-
-        }
-    }
-
-    @FXML
-    public void saveClicked(ActionEvent actionEvent) {
-        try {
-            // Holt die aktuellen Settings aus dem AppContext
-            SettingsState stateToSave = AppContext.get().settings;
-
-            // Speichert sie in die Datei "default.json"
-            AppContext.get().saveService.save("default", stateToSave);
-
-            System.out.println("Simulation erfolgreich gespeichert!");
-        } catch (IOException e) {
-            System.err.println("Fehler beim Speichern: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
     public void exitAndSaveClicked(ActionEvent actionEvent) {
-        saveClicked(actionEvent);
-
-        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
-    }
-
-    @FXML
-    public void exitClicked(ActionEvent actionEvent) {
-        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
-    }
-
-
-    @FXML
-    public void settingsClickedInSimulation(ActionEvent actionEvent) {
-        stopSimulation();
-        ChangeScene(gridPane, StaticVarsHolder.SettingsScreen);
-    }
-
-    @FXML
-    public void restartClicked(ActionEvent actionEvent) {
-        stopSimulation();
-        try {
-
-            String fxmlPath = "/at/ac/hcw/langtonsantproject/simulation-screen.fxml";
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
-
-            SimulationScreenController controller = loader.getController();
-            if (this.currentSettings != null) {
-                controller.runTimeInitialise(this.currentSettings);
-            }
-
-            Stage stage = (Stage) gridPane.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
