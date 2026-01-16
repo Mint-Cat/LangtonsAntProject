@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:id="gridPane"
-            fx:controller="at.ac.hcw.langtonsantproject.Controller.SettingScreenController"
-            alignment="CENTER"
-            >
+<VBox alignment="CENTER" spacing="20.0" styleClass="main-container" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.hcw.langtonsantproject.Controller.SettingScreenController">
+    <padding>
+        <Insets bottom="30.0" left="50.0" right="50.0" top="30.0" />
+    </padding>
+    <children>
+        <Label text="Settings" styleClass="settings-title" />
 
-            <Label fx:id="settingScreen"/>
-    <VBox fx:id="vBox" alignment="CENTER" spacing="15" GridPane.vgrow="ALWAYS" GridPane.hgrow="always">
-        <Label fx:id="settingsLabel" alignment="TOP_CENTER">Settings</Label>
-        <VBox fx:id="sizeVBox" alignment="CENTER">
-           <Label>Size</Label>
-        </VBox>
-        <VBox fx:id="stepsVBox" alignment="CENTER">
-            <Label>Steps</Label>
-        </VBox>
-        <VBox fx:id="speedVBOX" alignment="CENTER">
-            <Label>Speed</Label>
-        </VBox>
-        <VBox fx:id="startingPointVBox" alignment="CENTER" >
-            <Label>Starting Point</Label>
-            <HBox fx:id="hBoxCoo" alignment="CENTER" spacing="10">
-                <Label fx:id="xPosLabel"> X: </Label>
-                <Label fx:id="yPosLabel"> Y: </Label>
-            </HBox>
-        </VBox>
+        <GridPane hgap="15.0" vgap="15.0" alignment="CENTER">
+            <Label text="Width:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="setting-label"/>
+            <Slider fx:id="widthSlider" min="10" max="100" value="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label fx:id="widthValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="0" styleClass="value-display"/>
 
-        <Button text="START" fx:id="StartButton" onAction="#StartButtonClick"/>
-    </VBox>
-</GridPane>
+            <Label text="Height:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="setting-label"/>
+            <Slider fx:id="heightSlider" min="10" max="100" value="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="heightValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="value-display"/>
+
+            <Label text="Steps:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="setting-label"/>
+            <Slider fx:id="stepsSlider" min="10" max="1000" value="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="stepsValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="2" styleClass="value-display"/>
+
+            <Label text="Speed:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="setting-label"/>
+            <Slider fx:id="speedSlider" min="1" max="200" value="50" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="speedValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="3" styleClass="value-display"/>
+        </GridPane>
+
+        <Button onAction="#applySettingsClick" prefWidth="250.0" text="Start Simulation" styleClass="menu-button" />
+        <Button onAction="#backToMenuClick" prefWidth="250.0" text="Back to Menu" styleClass="menu-button-secondary" />
+    </children>
+</VBox>

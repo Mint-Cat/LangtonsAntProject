@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="at.ac.hcw.langtonsantproject.Controller.StartScreenController"
-            alignment="CENTER"
-            hgap="10"
-            vgap="10"
-            fx:id="gridPane"
-            >
-            <Label fx:id="startscreen"/>
-<VBox fx:id="parent" >
-        <Label fx:id="NameLabel" alignment="CENTER"> Langton's Ant </Label>
-        <Button fx:id="NewAntButton" text="New Ant" onAction="#NewAntButtonClick" alignment="CENTER"/>
-        <Button fx:id="LoadAntButton" text="Load Ant" onAction="#LoadAntButtonClick" alignment="CENTER"/>
-        <Button fx:id="DeleteAntButton" text="Delete Ant" onAction="#DeleteAntButtonClick" alignment="CENTER"/>
-</VBox>
+<GridPane fx:id="gridPane" alignment="CENTER" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.hcw.langtonsantproject.Controller.StartScreenController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" halignment="CENTER" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS" valignment="CENTER" />
+    </rowConstraints>
+    <children>
+        <VBox alignment="CENTER" spacing="25.0" styleClass="main-container">
+            <children>
+                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Pictures/ANT.png" />
+                    </image>
+                </ImageView>
+                <Label fx:id="NameLabel" text="Langton's Ant" />
+                <Button onAction="#NewAntButtonClick" prefWidth="250.0" text="New Ant" />
+                <Button onAction="#LoadAntButtonClick" prefWidth="250.0" text="Load Ant" />
+                <Button onAction="#DeleteAntButtonClick" prefWidth="250.0" text="Delete Ant" />
+            </children>
+        </VBox>
+    </children>
 </GridPane>
