@@ -1,0 +1,99 @@
+/* --- BASIS UND HINTERGRUND --- */
+.root {
+    -fx-background-color: #FFF9F9; /* Ganz helles Rosa/Weiß */
+}
+
+/* --- TITEL (START & SETTINGS) --- */
+#NameLabel, .settings-title {
+    -fx-text-fill: #7F1D1D; /* Dein Dunkelrot */
+    -fx-font-weight: bold;
+    -fx-font-size: 48px;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-padding: 20 0;
+}
+
+/* --- CONTAINER-LAYOUT --- */
+.main-container {
+    -fx-padding: 40 20 20 20; /* Abstand für die Optik */
+}
+
+/* --- BUTTONS (HAUPTMENÜ & SETTINGS) --- */
+.button {
+    -fx-background-color: #991B1B; /* Sattes Rot */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-background-radius: 15;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #B91C1C; /* Helleres Rot beim Drüberfahren */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* --- EINSTELLUNGEN (SLIDER & LABELS) --- */
+.setting-label {
+    -fx-text-fill: #7F1D1D; /* */
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+/* Die Slider-Schiene */
+.slider .track {
+    -fx-background-color: #fca5a5; /* Hellroter Hintergrund */
+    -fx-background-radius: 5;
+    -fx-pref-height: 6px;
+}
+
+/* Der Schiebe-Knopf des Sliders */
+.slider .thumb {
+    -fx-background-color: #7F1D1D; /* Dunkelroter Punkt */
+    -fx-background-radius: 10;
+}
+
+/* Die Live-Zahlen neben den Slidern */
+.value-display {
+    -fx-text-fill: #7F1D1D;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-min-width: 40px;
+}
+
+/* --- SIMULATIONS-BILDSCHIRM (TOOLBAR) --- */
+.simulation-toolbar {
+    -fx-background-color: #7F1D1D; /* Dunkelrote Leiste oben */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);
+}
+
+.simulation-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+/* Buttons in der Simulations-Leiste (Weiß auf Rot) */
+.tool-button {
+    -fx-background-color: white;
+    -fx-text-fill: #7F1D1D;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.tool-button:hover {
+    -fx-background-color: #fca5a5;
+}
+
+/* --- SPIELFELD (GRID) --- */
+.grid-container {
+    -fx-background-color: #FFF9F9; /* Hintergrund hinter dem Gitter */
+}
+
+.simulation-grid {
+    -fx-background-color: #cccccc; /* Farbe der Gitterlinien */
+    -fx-hgap: 1;
+    -fx-vgap: 1;
+}

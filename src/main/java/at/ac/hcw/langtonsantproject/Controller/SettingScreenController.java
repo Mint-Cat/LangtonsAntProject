@@ -1,158 +1,91 @@
 package at.ac.hcw.langtonsantproject.Controller;
 
 import at.ac.hcw.langtonsantproject.AppContext;
+import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
-import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
-import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
-
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class SettingScreenController extends SceneControl implements Initializable {
-    @FXML public Label settingScreen;
-    @FXML public Button StartButton;
-    @FXML public VBox sizeVBox;
-    @FXML public VBox stepsVBox;
-    @FXML public VBox speedVBOX;
-    @FXML public VBox startingPointVBox;
-    @FXML public GridPane gridPane;
-    @FXML public Label settingsLabel;
-    @FXML public Label xPosLabel;
-    @FXML public Label yPosLabel;
-    @FXML public HBox hBoxCoo;
 
-    // Diese Variablen speichern die aktuellen Werte der UI-Elemente
-    public double currentWithSliderValue;
-    public double currentHeighSliderValue;
-    public double currentSpeedValue;
-    public double currentStepsValue;
-    public double currentPosX;
-    public double currentPosY;
+    @FXML public Slider widthSlider, heightSlider, stepsSlider, speedSlider, startXSlider, startYSlider;
+    @FXML public Label widthValueLabel, heightValueLabel, stepsValueLabel, speedValueLabel, startXValueLabel, startYValueLabel;
 
-    @FXML
-    public void StartButtonClick(ActionEvent actionEvent) {
-        SettingsState settings = AppContext.get().settings;
-        if (settings != null) {
-            settings.height = currentHeighSliderValue;
-            settings.width = currentWithSliderValue;
-            settings.speed = currentSpeedValue;
-            settings.steps = (int) currentStepsValue;
-
-            // Speichere die Startpositionen der Ameise
-            settings.antStartPointX = (int) currentPosX;
-            settings.antStartPointY = (int) currentPosY;
-        }
-        ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
-    }
-
-    public Slider makeSlider(int defaultValue, double min, double max) {
-        Slider slide = new Slider();
-        slide.setMin(min);
-        slide.setMax(max);
-        slide.setBlockIncrement(1);
-        slide.setValue(defaultValue);
-        return slide;
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        responsive();
+        // Design für dieses Fenster aktivieren
+        Platform.runLater(() -> {
+            if (widthSlider.getScene() != null) {
+                String css = Objects.requireNonNull(getClass().getResource("/at/ac/hcw/langtonsantproject/style.css")).toExternalForm();
+                widthSlider.getScene().getStylesheets().add(css);
+            }
+        });
 
-        // Standardwerte definieren
-        SettingsState s = AppContext.get().settings;
 
-        int widthDefault = (s.width > 0) ? (int) s.width : 10;
-        int heighDefault = (s.height > 0) ? (int) s.height : 10;
-        int stepDefault = (s.steps > 0) ? s.steps : 50;
-        int speedDefault = (s.speed > 0) ? (int) s.speed : 50;
+        // Zeigt die Zahl neben dem Slider an
+        widthValueLabel.textProperty().bind(Bindings.format("%.0f", widthSlider.valueProperty()));
+        heightValueLabel.textProperty().bind(Bindings.format("%.0f", heightSlider.valueProperty()));
+        stepsValueLabel.textProperty().bind(Bindings.format("%.0f", stepsSlider.valueProperty()));
+        speedValueLabel.textProperty().bind(Bindings.format("%.0f", speedSlider.valueProperty()));
+        startXValueLabel.textProperty().bind(Bindings.format("%.0f", startXSlider.valueProperty()));
+        startYValueLabel.textProperty().bind(Bindings.format("%.0f", startYSlider.valueProperty()));
 
-        int posXDefault = s.antStartPointX;
-        int posYDefault = s.antStartPointY;
-
-        // --- WIDTH ---
-        Slider widthSlider = makeSlider(widthDefault, 1, 20);
-        Label widthLabel = new Label("Width: " + widthDefault);
-        currentWithSliderValue = widthDefault;
+        // Wenn die Breite sich ändert, springt Start X & Y automatisch in die Mitte
         widthSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            int val = newVal.intValue();
-            widthLabel.setText("Width: " + val);
-            currentWithSliderValue = val;
+            startXSlider.setMax(newVal.doubleValue());
+            startXSlider.setValue(newVal.doubleValue() / 2);
         });
 
-        // --- HEIGHT ---
-        Slider heightSlider = makeSlider(heighDefault, 1, 20);
-        Label heightLabel = new Label("Height: " + heighDefault);
-        currentHeighSliderValue = heighDefault;
         heightSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            int val = newVal.intValue();
-            heightLabel.setText("Height: " + val);
-            currentHeighSliderValue = val;
-        });
-        sizeVBox.getChildren().clear();
-        sizeVBox.getChildren().addAll(widthSlider, heightSlider, widthLabel, heightLabel);
-
-        // --- STEPS ---
-        Slider stepsSlider = makeSlider(stepDefault, 1, 100);
-        Label stepsLabel = new Label("Steps: " + stepDefault);
-        currentStepsValue = stepDefault;
-        stepsSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            int val = newVal.intValue();
-            stepsLabel.setText("Steps: " + val);
-            currentStepsValue = val;
-        });
-        stepsVBox.getChildren().clear();
-        stepsVBox.getChildren().addAll(stepsSlider, stepsLabel);
-
-        // --- SPEED ---
-        Slider speedSlider = makeSlider(speedDefault, 1, 100);
-        Label speedLabel = new Label("Speed: " + speedDefault);
-        currentSpeedValue = speedDefault;
-        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            int val = newVal.intValue();
-            speedLabel.setText("Speed: " + val);
-            currentSpeedValue = val;
-        });
-        speedVBOX.getChildren().clear();
-        speedVBOX.getChildren().addAll(speedSlider, speedLabel);
-
-        // --- STARTING POINT X & Y ---
-        TextField xPosTextField = new TextField(String.valueOf(posXDefault));
-        currentPosX = posXDefault;
-        xPosTextField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                currentPosX = Integer.parseInt(newVal);
-            } catch (NumberFormatException e) { currentPosX = 0; }
+            startYSlider.setMax(newVal.doubleValue());
+            startYSlider.setValue(newVal.doubleValue() / 2);
         });
 
-        TextField yPosTextfield = new TextField(String.valueOf(posYDefault));
-        currentPosY = posYDefault;
-        yPosTextfield.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                currentPosY = Integer.parseInt(newVal);
-            } catch (NumberFormatException e) { currentPosY = 0; }
-        });
-
-        hBoxCoo.getChildren().clear();
-        hBoxCoo.getChildren().addAll(xPosLabel, xPosTextField, yPosLabel, yPosTextfield);
+        if (AppContext.get().settings != null && !AppContext.get().isFirstStart) {
+            widthSlider.setValue(AppContext.get().settings.width);
+            heightSlider.setValue(AppContext.get().settings.height);
+            stepsSlider.setValue(AppContext.get().settings.steps);
+            speedSlider.setValue(AppContext.get().settings.speed);
+            startXSlider.setValue(AppContext.get().settings.antStartPointX);
+            startYSlider.setValue(AppContext.get().settings.antStartPointY);
+        } else {
+            setDefaultValues();
+        }
     }
 
-    public void responsive() {
+    private void setDefaultValues() {
+        widthSlider.setValue(55);
+        heightSlider.setValue(55);
+        stepsSlider.setValue(500);
+        speedSlider.setValue(100);
+        startXSlider.setValue(28);
+        startYSlider.setValue(28);
+    }
 
-        gridPane.getChildren().clear();
-        gridPane.add(settingsLabel, 1, 0);
-        gridPane.add(sizeVBox, 1, 1);
-        gridPane.add(stepsVBox, 1, 2);
-        gridPane.add(speedVBOX, 1, 3);
-        gridPane.add(startingPointVBox, 1, 4);
-        gridPane.add(hBoxCoo, 1, 5);
-        gridPane.add(StartButton, 1, 6);
+    @FXML
+    public void applySettingsClick(ActionEvent actionEvent) {
+        // Siumaltion starten Button gedrückt
+        AppContext.get().settings.width = (int) widthSlider.getValue();
+        AppContext.get().settings.height = (int) heightSlider.getValue();
+        AppContext.get().settings.steps = (int) stepsSlider.getValue();
+        AppContext.get().settings.speed = (int) speedSlider.getValue();
+        AppContext.get().settings.antStartPointX = (int) startXSlider.getValue();
+        AppContext.get().settings.antStartPointY = (int) startYSlider.getValue();
+        AppContext.get().setFirstStart(false);
+        ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
+    }
+
+    @FXML
+    public void backToMenuClick(ActionEvent actionEvent) {
+        ChangeScene(actionEvent, StaticVarsHolder.StartScreen);
     }
 }

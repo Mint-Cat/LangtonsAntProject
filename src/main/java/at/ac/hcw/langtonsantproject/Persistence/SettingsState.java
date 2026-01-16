@@ -8,8 +8,8 @@ package at.ac.hcw.langtonsantproject.Persistence;
     public int fileVersion = 1;
 
     /** Grid-/Canvas-Größe oder Settings-Werte aus dem Settings Screen. */
-    public double width =0;
-    public double height =0;
+    public double width = 0;
+    public double height = 0;
 
     /** Maximale Steps/Iterationsanzahl. */
     public int steps;
@@ -18,5 +18,5 @@ package at.ac.hcw.langtonsantproject.Persistence;
     public double speed;
 
     public int antStartPointX = 5;
-    public int antStartPointY=5;
+    public int antStartPointY = 5;
 }
