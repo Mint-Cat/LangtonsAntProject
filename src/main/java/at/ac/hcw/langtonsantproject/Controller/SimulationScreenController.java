@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -27,18 +28,21 @@ import java.util.ResourceBundle;
 public class SimulationScreenController extends SceneControl implements Initializable {
 
     @FXML public Label simulationScreen;
+    @FXML public MenuButton settingButtonInSimulationScreen;
     @FXML private GridPane gridPane;
     @FXML private StackPane gridHolder;
 
     private SettingsState currentSettings;
-    private double fixedCellSize; // FESTE Größe statt Binding
+    private double fixedCellSize;
 
     private boolean[][] antGrid;
     private Rectangle[][] cellRects;
     private StackPane[][] cellPanes;
     private int stepsRemaining;
-    private int antXLocation, antYLocation;
+    private int antXLocation;
+    private int antYLocation;
     private AntOrientation currentAntOrientation = AntOrientation.up;
+
     private Timeline simLoop;
     private ImageView antView;
 
@@ -47,7 +51,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
         SettingsState settings = AppContext.get().settings;
         if (settings == null) return;
 
-        // CSS laden
         String css = getClass().getResource("/at/ac/hcw/langtonsantproject/style.css").toExternalForm();
         Platform.runLater(() -> {
             if (gridPane.getScene() != null) {
@@ -57,32 +60,33 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
         runTimeInitialise(settings);
 
-        // Geschwindigkeit nutzen
-        double speed = settings.speed <= 0 ? 50 : settings.speed;
-        simLoop = new Timeline(new KeyFrame(Duration.millis(1000.0 / speed), e -> MoveAnt()));
+        double speedValue = settings.speed <= 0 ? 50 : settings.speed;
+        simLoop = new Timeline(new KeyFrame(Duration.millis(1000.0 / speedValue), e -> MoveAnt()));
         simLoop.setCycleCount(Timeline.INDEFINITE);
+
         startSimulation();
     }
 
     public void runTimeInitialise(SettingsState settings) {
         this.currentSettings = settings;
-        int w = (int) settings.width;
-        int h = (int) settings.height;
+        int height = (int) settings.height;
+        int width = (int) settings.width;
         this.stepsRemaining = (int) settings.steps;
 
-        antGrid = new boolean[h][w];
-        cellRects = new Rectangle[h][w];
-        cellPanes = new StackPane[h][w];
+        antGrid = new boolean[height][width];
+        cellRects = new Rectangle[height][width];
+        cellPanes = new StackPane[height][width];
+
         antXLocation = settings.antStartPointX;
         antYLocation = settings.antStartPointY;
 
-        // Zellengröße EINMALIG berechnen (Fenster ist 800x600)
-        double availW = 740.0 / w;
-        double availH = 480.0 / h;
+        // BERECHNUNG: Gittergröße einmal festlegen
+        double availW = 740.0 / width;
+        double availH = 480.0 / height;
         this.fixedCellSize = Math.min(availW, availH);
-        if (this.fixedCellSize > 40) this.fixedCellSize = 40; // Max Größe
+        if (this.fixedCellSize > 40) this.fixedCellSize = 40;
 
-        buildGridUI(w, h);
+        buildGridUI(width, height);
         redrawAll();
         spawnAntImage();
         simulationScreen.setText("Steps Remaining: " + stepsRemaining);
@@ -93,12 +97,8 @@ public class SimulationScreenController extends SceneControl implements Initiali
         gridPane.getColumnConstraints().clear();
         gridPane.getRowConstraints().clear();
 
-        for (int col = 0; col < width; col++) {
-            gridPane.getColumnConstraints().add(new ColumnConstraints(fixedCellSize));
-        }
-        for (int row = 0; row < height; row++) {
-            gridPane.getRowConstraints().add(new RowConstraints(fixedCellSize));
-        }
+        for (int i = 0; i < width; i++) gridPane.getColumnConstraints().add(new ColumnConstraints(fixedCellSize));
+        for (int i = 0; i < height; i++) gridPane.getRowConstraints().add(new RowConstraints(fixedCellSize));
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
@@ -106,7 +106,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
                 Rectangle r = new Rectangle(fixedCellSize, fixedCellSize);
                 r.setStroke(Color.LIGHTGRAY);
                 r.setFill(Color.WHITE);
-
                 cell.getChildren().add(r);
                 cellPanes[row][col] = cell;
                 cellRects[row][col] = r;
@@ -148,7 +147,9 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     private void moveAntImageTo(int x, int y) {
         if (antView == null) return;
-        ((Pane)antView.getParent()).getChildren().remove(antView);
+        if (antView.getParent() instanceof Pane p) {
+            p.getChildren().remove(antView);
+        }
         cellPanes[y][x].getChildren().add(antView);
     }
 
@@ -163,42 +164,62 @@ public class SimulationScreenController extends SceneControl implements Initiali
     }
 
     private void updateCell(int row, int col) {
-        // KLASSISCH SCHWARZ / WEISS
+        // ZURÜCK ZU SCHWARZ-WEISS
         cellRects[row][col].setFill(antGrid[row][col] ? Color.BLACK : Color.WHITE);
     }
 
-    // --- Hilfsmethoden ---
     private AntOrientation rotate(int direction) {
         AntOrientation[] vals = AntOrientation.values();
         return vals[(currentAntOrientation.ordinal() + direction + vals.length) % vals.length];
     }
+
     private void updateAntRotation() {
         antView.setRotate(switch (currentAntOrientation) {
             case up -> 0; case right -> 90; case down -> 180; case left -> 270;
         });
     }
+
     public void toggleCell(int row, int col) {
         antGrid[row][col] = !antGrid[row][col];
         updateCell(row, col);
     }
+
     private void redrawAll() {
         for (int r = 0; r < antGrid.length; r++)
             for (int c = 0; c < antGrid[r].length; c++) updateCell(r, c);
     }
+
     public void startSimulation() { simLoop.play(); }
-    public void stopSimulation() { simLoop.stop(); }
     public void pauseSimulation() { simLoop.pause(); }
+    public void stopSimulation() { simLoop.stop(); }
 
     @FXML public void pauseClicked(ActionEvent e) {
         if (simLoop.getStatus() == Timeline.Status.RUNNING) pauseSimulation(); else startSimulation();
     }
+
     @FXML public void saveClicked(ActionEvent e) {
         try { AppContext.get().saveService.save("default", AppContext.get().settings); } catch (IOException ex) { ex.printStackTrace(); }
     }
-    @FXML public void exitClicked(ActionEvent e) { stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen); }
-    @FXML public void restartClicked(ActionEvent e) { stopSimulation(); ChangeScene(e, StaticVarsHolder.SimulationScreen); }
-    @FXML public void settingsClickedInSimulation(ActionEvent e) { stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen); }
 
-    public void exitAndSaveClicked(ActionEvent actionEvent) {
+    @FXML public void exitAndSaveClicked(ActionEvent actionEvent) {
+        saveClicked(actionEvent);
+        stopSimulation();
+        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
+    }
+
+    @FXML public void exitClicked(ActionEvent e) {
+        stopSimulation();
+        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
+    }
+
+    @FXML public void settingsClickedInSimulation(ActionEvent e) {
+        stopSimulation();
+        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
+    }
+
+    @FXML public void restartClicked(ActionEvent e) {
+        stopSimulation();
+        // RESTART-FIX: Nutzt gridPane statt ActionEvent
+        ChangeScene(gridPane, StaticVarsHolder.SimulationScreen);
     }
 }
