@@ -23,12 +23,21 @@
             <Slider fx:id="stepsSlider" min="10" max="1000" value="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="stepsValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="2" styleClass="value-display"/>
 
-            <Label text="Speed:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="setting-label"/>
-            <Slider fx:id="speedSlider" min="1" max="200" value="50" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="speedValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="3" styleClass="value-display"/>
+            <Label text="Start X:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="setting-label"/>
+            <Slider fx:id="startXSlider" min="0" max="100" value="25" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="startXValueLabel" text="25" GridPane.columnIndex="2" GridPane.rowIndex="3" styleClass="value-display"/>
+
+            <Label text="Start Y:" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="setting-label"/>
+            <Slider fx:id="startYSlider" min="0" max="100" value="25" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="startYValueLabel" text="25" GridPane.columnIndex="2" GridPane.rowIndex="4" styleClass="value-display"/>
+
+            <Label text="Speed:" GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="setting-label"/>
+            <Slider fx:id="speedSlider" min="1" max="200" value="50" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="speedValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="5" styleClass="value-display"/>
         </GridPane>
 
-        <Button onAction="#applySettingsClick" prefWidth="250.0" text="Start Simulation" styleClass="menu-button" />
-        <Button onAction="#backToMenuClick" prefWidth="250.0" text="Back to Menu" styleClass="menu-button-secondary" />
+        <Button onAction="#applySettingsClick" prefWidth="250.0" text="Start Simulation" styleClass="button" />
+        <Button onAction="#backToMenuClick" prefWidth="250.0" text="Back to Menu" styleClass="button" />
+        <Button text="Start Simulation" styleClass="button" onAction="#applySettingsClick" />
     </children>
 </VBox>
