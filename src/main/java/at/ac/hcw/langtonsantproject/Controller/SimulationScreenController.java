@@ -206,7 +206,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
     private void spawnAntImage() {
         Image img = new Image(
                 Objects.requireNonNull(getClass().getResourceAsStream("/at/ac/hcw/langtonsantproject/pictures/ANT.png")),
-                10, 10, true, true
+                50, 50, true, true
         );
         antView = new ImageView(img);
         antView.setPreserveRatio(true);
@@ -377,7 +377,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
     @FXML
     public void settingsClickedInSimulation(ActionEvent actionEvent) {
         stopSimulation();
-        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
+        ChangeScene(gridPane, StaticVarsHolder.SettingsScreen);
     }
 
     @FXML
