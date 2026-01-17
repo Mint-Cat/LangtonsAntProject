@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import at.ac.hcw.langtonsantproject.Persistence.SimulationState;
 
 
  //Persistenz-Schicht: Speichern/Laden/Löschen von Settings als JSON.
@@ -48,5 +49,31 @@ public class SaveGameService {
 
     public void delete(String slot) throws IOException {
         Files.deleteIfExists(file(slot));
+
+        }
+
+        private Path simFile(String slot) {
+        return dir.resolve(slot + "_sim.json");
+        }
+
+        public void saveSimulation(String slot, SimulationState state) throws IOException {
+        Files.createDirectories(dir);
+        Path tmp = dir.resolve(slot + "_sim.tmp");
+        Path target = simFile(slot);
+
+        try (Writer w = Files.newBufferedWriter(tmp, StandardCharsets.UTF_8)) {
+            gson.toJson(state, w);
+        }
+
+        Files.move(tmp, target,
+                StandardCopyOption.REPLACE_EXISTING,
+                StandardCopyOption.ATOMIC_MOVE);
+        }
+
+        public SimulationState loadSimulation(String slot) throws IOException {
+        Path target = simFile(slot);
+        try (Reader r = Files.newBufferedReader(target, StandardCharsets.UTF_8)) {
+            return gson.fromJson(r, SimulationState.class);
+        }
+        }
     }
-}

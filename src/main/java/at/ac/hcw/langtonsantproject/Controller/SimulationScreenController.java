@@ -22,6 +22,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -91,6 +92,25 @@ public class SimulationScreenController extends SceneControl implements Initiali
         buildGridUI(width, height);
         redrawAll();
         spawnAntImage();
+        simulationScreen.setText("Steps Remaining: " + stepsRemaining);
+    }
+
+    //loadSimulationState Methode für Speichern + laden
+    public void loadSimulationState(at.ac.hcw.langtonsantproject.Persistence.SimulationState state) {
+        //UI anhand von saved Settings aufbauen
+        runTimeInitialise(state.settings);
+
+        //saved Zustand übernehmen
+        this.antGrid = state.grid;
+        this.antXLocation = state.antX;
+        this.antYLocation = state.antY;
+        this.currentAntOrientation = state.orientation;
+        this.stepsRemaining = state.stepsRemaining;
+
+        //UI aktualisieren
+        redrawAll();
+        moveAntImageTo(antXLocation, antYLocation);
+        updateAntRotation();
         simulationScreen.setText("Steps Remaining: " + stepsRemaining);
     }
 
@@ -203,12 +223,33 @@ public class SimulationScreenController extends SceneControl implements Initiali
             pauseButton.setText("Pause");
         }
     }
+        public  void stepClicked(ActionEvent e) {
+        //Wenn Sim läuft -> pausiert
+        if (simLoop != null && simLoop.getStatus() == Timeline.Status.RUNNING) {
+            simLoop.pause ();
+            //Selbes Verhalten wie Pause Button
+            pauseButton.setText("Resume");
+        }
+        MoveAnt();
+        }
+
 
     @FXML public void saveClicked(ActionEvent e) {
-        try { AppContext.get().saveService.save("default", AppContext.get().settings); }
-        catch (IOException ex) { ex.printStackTrace(); }
-    }
+        try {
+            var simState = new at.ac.hcw.langtonsantproject.Persistence.SimulationState();
+            simState.settings = currentSettings != null ? currentSettings : AppContext.get().settings;
+            simState.grid = antGrid;
+            simState.antX = antXLocation;
+            simState.antY = antYLocation;
+            simState.orientation = currentAntOrientation;
+            simState.stepsRemaining = stepsRemaining;
 
+            AppContext.get().saveService.saveSimulation("default", simState);
+            System.out.println("Successfully saved Simulation!");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
     @FXML public void exitClicked(ActionEvent e) {
         stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
@@ -224,7 +265,9 @@ public class SimulationScreenController extends SceneControl implements Initiali
     }
 
     @FXML void exitAndSaveClicked(ActionEvent e) {
-        try { AppContext.get().saveService.save("default", AppContext.get().settings); } catch (IOException ex) { ex.printStackTrace(); }
-        stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen);
+        //Speichert Simulationszustand
+        saveClicked(e);
+        stopSimulation();
+        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
 }

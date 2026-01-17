@@ -4,6 +4,7 @@ module at.ac.hcw.langtonsantproject {
     requires javafx.base;
     requires javafx.graphics;
     requires com.google.gson;
+    requires java.sql;
 
 
     opens at.ac.hcw.langtonsantproject to javafx.fxml;

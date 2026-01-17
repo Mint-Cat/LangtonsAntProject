@@ -48,14 +48,35 @@ public class StartScreenController extends SceneControl implements Initializable
     @FXML
     public void LoadAntButtonClick(ActionEvent actionEvent) {
         try {
-            // Speicherstand laden
-            AppContext.get().settings = AppContext.get().saveService.load("default");
+            // 1. Simulationszustand laden
+            var simState = AppContext.get().saveService.loadSimulation("default");
 
-            // Direkt zur Simulation
-            ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
+            //2. Settings in AppContext -> initialize in SimulationScreen
+            AppContext.get().settings = simState.settings;
+
+            //3. SimulationScreen manuell laden -> Controller
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource(StaticVarsHolder.SimulationScreen)
+            );
+            javafx.scene.Parent root = loader.load();
+
+            at.ac.hcw.langtonsantproject.Controller.SimulationScreenController controller = loader.getController();
+
+
+            //4. Simulationszustand im Controller benutzen
+            controller.loadSimulationState(simState);
+
+            //5. Scene setzen
+            javafx.stage.Stage stage = (javafx.stage.Stage) gridPane.getScene().getWindow();
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 800, 600);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            stage.show();
+
         } catch (IOException e) {
-            System.err.println("Kein Speicherstand gefunden: " + e.getMessage());
-            WarningLabel.setText("Kein Speicherstand gefunden!");
+            System.err.println("No save state found: " + e.getMessage());
+            WarningLabel.setText("No save state found!");
         }
     }
 
