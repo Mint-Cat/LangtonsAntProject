@@ -20,19 +20,19 @@
             <Label fx:id="heightValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="value-display"/>
 
             <Label text="Steps:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="setting-label"/>
-            <Slider fx:id="stepsSlider" min="10" max="1000" value="500" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Slider fx:id="stepsSlider" min="10" max="1000" value="200" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="stepsValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="2" styleClass="value-display"/>
 
             <Label text="Start X:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="setting-label"/>
-            <Slider fx:id="startXSlider" min="1" max="55" value="50" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Slider fx:id="startXSlider" min="1" max="55" value="15" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="startXValueLabel" text="25" GridPane.columnIndex="2" GridPane.rowIndex="3" styleClass="value-display"/>
 
             <Label text="Start Y:" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="setting-label"/>
-            <Slider fx:id="startYSlider" min="1" max="55" value="50" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Slider fx:id="startYSlider" min="1" max="55" value="15" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="startYValueLabel" text="25" GridPane.columnIndex="2" GridPane.rowIndex="4" styleClass="value-display"/>
 
             <Label text="Speed:" GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="setting-label"/>
-            <Slider fx:id="speedSlider" min="1" max="20" value="5" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Slider fx:id="speedSlider" min="1" max="20" value="3" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label fx:id="speedValueLabel" text="50" GridPane.columnIndex="2" GridPane.rowIndex="5" styleClass="value-display"/>
         </GridPane>
 
