@@ -83,14 +83,17 @@ public class StartScreenController extends SceneControl implements Initializable
     @FXML
     public void DeleteAntButtonClick(ActionEvent actionEvent) {
         try {
-            // Speicherstand löschen
+            //Settings-Save löschen
             AppContext.get().saveService.delete("default");
-            System.out.println("Speicherstand erfolgreich gelöscht.");
-            WarningLabel.setText("Speicherstand erfolgreich gelöscht!");
+            //Sim.-Save löschen
+            AppContext.get().saveService.deleteSimulation("default");
+
+            System.out.println("Ant successfully deleted.");
+            WarningLabel.setText("Ant successfully deleted!");
             AppContext.get().setFirstStart(true);
-        } catch (IOException e) {
-            System.err.println("Löschen fehlgeschlagen: " + e.getMessage());
-            WarningLabel.setText("Löschen fehlgeschlagen!");
+        }catch (IOException e) {
+            System.err.println("failed delete: " + e.getMessage());
+            WarningLabel.setText("failed delete!");
         }
-    }
+        }
 }
