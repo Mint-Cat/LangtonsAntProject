@@ -49,7 +49,7 @@ public class SettingScreenController extends SceneControl implements Initializab
             startYSlider.setValue(newVal.doubleValue() / 2);
         });
 
-        if (AppContext.get().settings != null && !AppContext.get().isFirstStart) {
+        if (AppContext.get().settings != null && !AppContext.get().useDefaultSettingValues) {
             widthSlider.setValue(AppContext.get().settings.width);
             heightSlider.setValue(AppContext.get().settings.height);
             stepsSlider.setValue(AppContext.get().settings.steps);
@@ -79,7 +79,7 @@ public class SettingScreenController extends SceneControl implements Initializab
         AppContext.get().settings.speed = (int) speedSlider.getValue();
         AppContext.get().settings.antStartPointX = (int) startXSlider.getValue();
         AppContext.get().settings.antStartPointY = (int) startYSlider.getValue();
-        AppContext.get().setFirstStart(false);
+        AppContext.get().setUseDefaultSettingValues(false);
         ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
     }
 

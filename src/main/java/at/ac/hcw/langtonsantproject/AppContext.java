@@ -13,9 +13,9 @@ public final class AppContext {
     ///All classes here that need to be shared, so scripts can communicate with each other more easily and only one Instace ever exists
     public SettingsState settings = new SettingsState();
     public SaveGameService saveService = new SaveGameService();
-    public boolean isFirstStart = true;
+    public boolean useDefaultSettingValues = true;
 
-    public void setFirstStart(boolean firstStart) {
-        isFirstStart = firstStart;
+    public void setUseDefaultSettingValues(boolean useDefaultSettingValues) {
+        this.useDefaultSettingValues = useDefaultSettingValues;
     }
 }

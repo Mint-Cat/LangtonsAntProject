@@ -27,18 +27,19 @@ import java.util.ResourceBundle;
 
 public class SimulationScreenController extends SceneControl implements Initializable {
 
+    //UI
     @FXML public Label simulationScreen;
-    //@FXML public MenuButton settingButtonInSimulationScreen;
     @FXML public Button pauseButton;
     @FXML private GridPane gridPane;
-    //@FXML private StackPane gridHolder;
 
+    //References
     private SettingsState currentSettings;
     private double fixedCellSize; // Fixe Größe
 
     private boolean[][] antGrid;
     private Rectangle[][] cellRects;
     private StackPane[][] cellPanes;
+
     private int stepsRemaining;
     private int antXLocation;
     private int antYLocation;

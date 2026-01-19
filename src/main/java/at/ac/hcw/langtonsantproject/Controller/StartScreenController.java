@@ -88,7 +88,7 @@ public class StartScreenController extends SceneControl implements Initializable
 
             System.out.println("Ant successfully deleted.");
             WarningLabel.setText("Ant successfully deleted!");
-            AppContext.get().setFirstStart(true);
+            AppContext.get().setUseDefaultSettingValues(true);
         }catch (IOException e) {
             System.err.println("failed delete: " + e.getMessage());
             WarningLabel.setText("failed delete!");
