@@ -31,7 +31,6 @@ public class SimulationScreenController extends SceneControl implements Initiali
     @FXML public Label simulationScreen;
     @FXML public Button pauseButton;
     @FXML private GridPane gridPane;
-
     //References
     private SettingsState currentSettings;
     private double fixedCellSize; // Fixe Größe

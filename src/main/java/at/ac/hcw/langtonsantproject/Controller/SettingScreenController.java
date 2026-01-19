@@ -19,7 +19,6 @@ public class SettingScreenController extends SceneControl implements Initializab
     @FXML public Slider widthSlider, heightSlider, stepsSlider, speedSlider, startXSlider, startYSlider;
     @FXML public Label widthValueLabel, heightValueLabel, stepsValueLabel, speedValueLabel, startXValueLabel, startYValueLabel;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Design für dieses Fenster aktivieren
