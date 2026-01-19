@@ -10,18 +10,25 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the settings screen.
+ * Handles user input via sliders and updates the global application context.
+ */
 public class SettingScreenController extends SceneControl implements Initializable {
 
-    @FXML public Slider widthSlider, heightSlider, stepsSlider, speedSlider, startXSlider, startYSlider;
-    @FXML public Label widthValueLabel, heightValueLabel, stepsValueLabel, speedValueLabel, startXValueLabel, startYValueLabel;
+    @FXML
+    public Slider widthSlider, heightSlider, stepsSlider, speedSlider, startXSlider, startYSlider;
+    @FXML
+    public Label widthValueLabel, heightValueLabel, stepsValueLabel, speedValueLabel, startXValueLabel, startYValueLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Design für dieses Fenster aktivieren
+        // Apply global stylesheet once the scene is active
         Platform.runLater(() -> {
             if (widthSlider.getScene() != null) {
                 String css = Objects.requireNonNull(getClass().getResource("/at/ac/hcw/langtonsantproject/style.css")).toExternalForm();
@@ -29,7 +36,7 @@ public class SettingScreenController extends SceneControl implements Initializab
             }
         });
 
-        // Zeigt die Zahl neben dem Slider an
+        // Bind slider values to labels for real-time visual feedback
         widthValueLabel.textProperty().bind(Bindings.format("%.0f", widthSlider.valueProperty()));
         heightValueLabel.textProperty().bind(Bindings.format("%.0f", heightSlider.valueProperty()));
         stepsValueLabel.textProperty().bind(Bindings.format("%.0f", stepsSlider.valueProperty()));
@@ -37,7 +44,7 @@ public class SettingScreenController extends SceneControl implements Initializab
         startXValueLabel.textProperty().bind(Bindings.format("%.0f", startXSlider.valueProperty()));
         startYValueLabel.textProperty().bind(Bindings.format("%.0f", startYSlider.valueProperty()));
 
-        // Wenn die Breite sich ändert, springt Start X & Y automatisch in die Mitte
+        // Add listeners to keep the ant's start position within grid bounds
         widthSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             startXSlider.setMax(newVal.doubleValue());
             startXSlider.setValue(newVal.doubleValue() / 2);
@@ -47,7 +54,7 @@ public class SettingScreenController extends SceneControl implements Initializab
             startYSlider.setMax(newVal.doubleValue());
             startYSlider.setValue(newVal.doubleValue() / 2);
         });
-
+        // Load existing settings or apply defaults
         if (AppContext.get().settings != null && !AppContext.get().useDefaultSettingValues) {
             widthSlider.setValue(AppContext.get().settings.width);
             heightSlider.setValue(AppContext.get().settings.height);
@@ -60,6 +67,9 @@ public class SettingScreenController extends SceneControl implements Initializab
         }
     }
 
+    /**
+     * Sets sliders to predefined default values from StaticVarsHolder.
+     */
     private void setDefaultValues() {
         widthSlider.setValue(StaticVarsHolder.defaultWidthSetting);
         heightSlider.setValue(StaticVarsHolder.defaultHeightSetting);
@@ -69,9 +79,11 @@ public class SettingScreenController extends SceneControl implements Initializab
         startYSlider.setValue(StaticVarsHolder.defaultStartYSliderSetting);
     }
 
+    /**
+     * Saves settings to AppContext and transitions to the simulation.
+     */
     @FXML
     public void applySettingsClick(ActionEvent actionEvent) {
-        // Siumaltion starten Button gedrückt
         AppContext.get().settings.width = (int) widthSlider.getValue();
         AppContext.get().settings.height = (int) heightSlider.getValue();
         AppContext.get().settings.steps = (int) stepsSlider.getValue();
@@ -82,6 +94,9 @@ public class SettingScreenController extends SceneControl implements Initializab
         ChangeScene(actionEvent, StaticVarsHolder.SimulationScreen);
     }
 
+    /**
+     * Navigates back to the main menu.
+     */
     @FXML
     public void backToMenuClick(ActionEvent actionEvent) {
         ChangeScene(actionEvent, StaticVarsHolder.StartScreen);
