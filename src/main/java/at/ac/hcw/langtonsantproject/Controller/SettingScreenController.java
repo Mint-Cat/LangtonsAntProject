@@ -63,12 +63,12 @@ public class SettingScreenController extends SceneControl implements Initializab
     }
 
     private void setDefaultValues() {
-        widthSlider.setValue(15);
-        heightSlider.setValue(15);
-        stepsSlider.setValue(200);
-        speedSlider.setValue(3);
-        startXSlider.setValue(7);
-        startYSlider.setValue(7);
+        widthSlider.setValue(StaticVarsHolder.defaultWidthSetting);
+        heightSlider.setValue(StaticVarsHolder.defaultHeightSetting);
+        stepsSlider.setValue(StaticVarsHolder.defaultStepsSetting);
+        speedSlider.setValue(StaticVarsHolder.defaultSpeedSetting);
+        startXSlider.setValue(StaticVarsHolder.defaultStartXSliderSetting);
+        startYSlider.setValue(StaticVarsHolder.defaultStartYSliderSetting);
     }
 
     @FXML
