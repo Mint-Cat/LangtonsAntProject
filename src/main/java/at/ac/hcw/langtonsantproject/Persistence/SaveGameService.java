@@ -49,7 +49,7 @@ public class SaveGameService {
         Files.deleteIfExists(file(slot));
 
         }
-        // Sim. Save state löschen
+        // delete simulation save-state
     public void deleteSimulation(String slot) throws IOException {
         Files.deleteIfExists(simFile(slot));
         }
