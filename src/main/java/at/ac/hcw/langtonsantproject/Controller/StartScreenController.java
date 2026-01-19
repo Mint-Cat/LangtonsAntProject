@@ -3,7 +3,6 @@ package at.ac.hcw.langtonsantproject.Controller;
 import at.ac.hcw.langtonsantproject.AppContext;
 import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
-import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,8 +59,7 @@ public class StartScreenController extends SceneControl implements Initializable
             );
             javafx.scene.Parent root = loader.load();
 
-            at.ac.hcw.langtonsantproject.Controller.SimulationScreenController controller = loader.getController();
-
+            SimulationScreenController controller = loader.getController();
 
             //4. Simulationszustand im Controller benutzen
             controller.loadSimulationState(simState);
@@ -95,5 +93,5 @@ public class StartScreenController extends SceneControl implements Initializable
             System.err.println("failed delete: " + e.getMessage());
             WarningLabel.setText("failed delete!");
         }
-        }
+    }
 }

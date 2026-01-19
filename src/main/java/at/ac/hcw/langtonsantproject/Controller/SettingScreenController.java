@@ -30,7 +30,6 @@ public class SettingScreenController extends SceneControl implements Initializab
             }
         });
 
-
         // Zeigt die Zahl neben dem Slider an
         widthValueLabel.textProperty().bind(Bindings.format("%.0f", widthSlider.valueProperty()));
         heightValueLabel.textProperty().bind(Bindings.format("%.0f", heightSlider.valueProperty()));

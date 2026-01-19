@@ -222,13 +222,15 @@ public class SimulationScreenController extends SceneControl implements Initiali
             for (int c = 0; c < antGrid[r].length; c++) updateCell(r, c);
     }
 
-    //------------ Simulation Control
+    //region Simulation Control
 
     public void startSimulation() { simLoop.play(); }
     public void pauseSimulation() {simLoop.pause(); }
     public void stopSimulation() { simLoop.stop(); }
 
-    //------------ Button Funcs
+    //endregion
+
+    //region Button Funcs
 
     @FXML public void pauseClicked(ActionEvent e) {
         if (simLoop.getStatus() == Timeline.Status.RUNNING) pauseSimulation(); else startSimulation();
@@ -288,4 +290,5 @@ public class SimulationScreenController extends SceneControl implements Initiali
         stopSimulation();
         ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
+    //endregion
 }
