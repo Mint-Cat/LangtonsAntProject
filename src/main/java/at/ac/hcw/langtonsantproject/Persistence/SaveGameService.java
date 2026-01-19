@@ -9,7 +9,10 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
- //Persistenz-Schicht: Speichern/Laden/Löschen von Settings als JSON.
+/**
+ * Persistence Layer: Responsible for saving, loading, and deleting simulation settings as JSON.
+ * Uses Google GSON for high-performance serialization.
+ */
 
 public class SaveGameService {
 
@@ -20,36 +23,14 @@ public class SaveGameService {
         return dir.resolve(slot + ".json");
     }
 
-    public boolean exists(String slot) {
-        return Files.exists(file(slot));
-    }
-
-    public void save(String slot, SettingsState state) throws IOException {
-        Files.createDirectories(dir);
-
-        Path tmp = dir.resolve(slot + ".tmp");
-        Path target = file(slot);
-
-        try (Writer w = Files.newBufferedWriter(tmp, StandardCharsets.UTF_8)) {
-            gson.toJson(state, w);
-        }
-
-        Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-    }
-
-    public SettingsState load(String slot) throws IOException {
-        Path target = file(slot);
-
-        try (Reader r = Files.newBufferedReader(target, StandardCharsets.UTF_8)) {
-            return gson.fromJson(r, SettingsState.class);
-        }
-    }
-
+    /**
+     * Deletes the settings file for a specific slot.
+     */
     public void delete(String slot) throws IOException {
         Files.deleteIfExists(file(slot));
 
         }
-        // Sim. Save state löschen
+
     public void deleteSimulation(String slot) throws IOException {
         Files.deleteIfExists(simFile(slot));
         }

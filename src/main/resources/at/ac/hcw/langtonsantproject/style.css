@@ -1,11 +1,11 @@
 /* --- BASIS UND HINTERGRUND --- */
 .root {
-    -fx-background-color: #FFF9F9; /* Ganz helles Rosa/Weiß */
+    -fx-background-color: #FFF9F9;
 }
 
 /* --- TITEL (START & SETTINGS) --- */
 #NameLabel, .settings-title {
-    -fx-text-fill: #7F1D1D; /* Dein Dunkelrot */
+    -fx-text-fill: #7F1D1D;
     -fx-font-weight: bold;
     -fx-font-size: 48px;
     -fx-font-family: "Segoe UI", Arial, sans-serif;
@@ -27,34 +27,32 @@
     -fx-padding: 10 30;
     -fx-cursor: hand;
 }
-
+/* Hover effects for improved usability */
 .button:hover {
-    -fx-background-color: #B91C1C; /* Helleres Rot beim Drüberfahren */
+    -fx-background-color: #B91C1C;
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-/* --- EINSTELLUNGEN (SLIDER & LABELS) --- */
 .setting-label {
-    -fx-text-fill: #7F1D1D; /* */
+    -fx-text-fill: #7F1D1D;
     -fx-font-weight: bold;
     -fx-font-size: 18px;
 }
 
-/* Die Slider-Schiene */
+/* --- SLIDERS --- */
 .slider .track {
-    -fx-background-color: #fca5a5; /* Hellroter Hintergrund */
+    -fx-background-color: #fca5a5;
     -fx-background-radius: 5;
     -fx-pref-height: 6px;
 }
 
-/* Der Schiebe-Knopf des Sliders */
 .slider .thumb {
     -fx-background-color: #7F1D1D; /* Dunkelroter Punkt */
     -fx-background-radius: 10;
 }
 
-/* Die Live-Zahlen neben den Slidern */
+
 .value-display {
     -fx-text-fill: #7F1D1D;
     -fx-font-weight: bold;
@@ -62,9 +60,9 @@
     -fx-min-width: 40px;
 }
 
-/* --- SIMULATIONS-BILDSCHIRM (TOOLBAR) --- */
+/* --- SIMULATION TOOLBAR --- */
 .simulation-toolbar {
-    -fx-background-color: #7F1D1D; /* Dunkelrote Leiste oben */
+    -fx-background-color: #7F1D1D;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);
 }
 
@@ -74,7 +72,6 @@
     -fx-font-size: 18px;
 }
 
-/* Buttons in der Simulations-Leiste (Weiß auf Rot) */
 .tool-button {
     -fx-background-color: white;
     -fx-text-fill: #7F1D1D;
@@ -87,13 +84,13 @@
     -fx-background-color: #fca5a5;
 }
 
-/* --- SPIELFELD (GRID) --- */
 .grid-container {
-    -fx-background-color: #FFF9F9; /* Hintergrund hinter dem Gitter */
+    -fx-background-color: #FFF9F9;
 }
 
 .simulation-grid {
-    -fx-background-color: #cccccc; /* Farbe der Gitterlinien */
+    -fx-background-color: #cccccc;
     -fx-hgap: 1;
     -fx-vgap: 1;
+
 }
