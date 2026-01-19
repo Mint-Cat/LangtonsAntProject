@@ -1,35 +1,35 @@
 package at.ac.hcw.langtonsantproject;
 
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
-import at.ac.hcw.langtonsantproject.Persistence.SaveGameService;
-import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.io.IOException;
+
 import java.net.URL;
 
 
-
+/**
+ * Main entry point for the JavaFX application.
+ * Responsibility: Initializes the primary stage and loads the initial scene.
+ */
 public class App extends Application {
 
     @Override
     public void start(Stage stage) {
         try {
-            // 1. Pfad prüfen
+
             URL fxmlLocation = App.class.getResource(StaticVarsHolder.StartScreen);
             if (fxmlLocation == null) {
-                System.err.println("FEHLER: FXML-Datei nicht gefunden! Pfad in StaticVarsHolder prüfen.");
+                System.err.println("ERROR: FXML file not found! Please check the path in StaticVarsHolder.");
                 return;
             }
 
-            // 2. Loader erstellen und laden
             FXMLLoader fxmlLoader = new FXMLLoader(fxmlLocation);
             Parent root = fxmlLoader.load();
 
-            // 3. Scene mit fester Größe erstellen
+            //  Create the scene with fixed dimensions
             Scene scene = new Scene(root, 800, 600);
 
             stage.setTitle("Langton's Ant Simulation");
@@ -37,11 +37,11 @@ public class App extends Application {
             stage.setResizable(false);
             stage.show();
 
-            System.out.println("Programm erfolgreich gestartet!");
+            System.out.println("Application started successfully!");
 
         } catch (Exception e) {
-            System.err.println("Absturz beim Starten:");
-            e.printStackTrace(); // Das zeigt uns im 'Run'-Fenster genau, was schief geht
+            System.err.println("CRITICAL ERROR: Failed to launch application:");
+            e.printStackTrace();
         }
     }
 
