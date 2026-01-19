@@ -1,10 +1,10 @@
 package at.ac.hcw.langtonsantproject.Controller;
 
 import at.ac.hcw.langtonsantproject.AppContext;
+import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
 import at.ac.hcw.langtonsantproject.Misc.AntOrientation;
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
-import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
 import at.ac.hcw.langtonsantproject.Persistence.SimulationState;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,20 +20,28 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/**
+ * Main simulation controller. Manages the Langton's Ant logic,
+ * grid rendering, and simulation loop.
+ */
 public class SimulationScreenController extends SceneControl implements Initializable {
 
     //UI
-    @FXML public Label simulationScreen;
-    @FXML public Button pauseButton;
-    @FXML private GridPane gridPane;
+    @FXML
+    public Label simulationScreen;
+    @FXML
+    public Button pauseButton;
+    @FXML
+    private GridPane gridPane;
     //References
     private SettingsState currentSettings;
-    private double fixedCellSize; // Fixe Größe
+    private double fixedCellSize;
 
     private boolean[][] antGrid;
     private Rectangle[][] cellRects;
@@ -55,8 +63,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
             return;
         }
-
-        // CSS laden
+        // Load global CSS
         String css = getClass().getResource("/at/ac/hcw/langtonsantproject/style.css").toExternalForm();
         Platform.runLater(() -> {
             if (gridPane.getScene() != null) {
@@ -65,7 +72,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
         });
 
         runTimeInitialise(settings);
-
+        // Setup the simulation loop based on speed setting
         double speedValue = settings.speed <= 0 ? 50 : settings.speed;
         simLoop = new Timeline(new KeyFrame(Duration.millis(1000.0 / speedValue), e -> MoveAnt()));
         simLoop.setCycleCount(Timeline.INDEFINITE);
@@ -73,10 +80,13 @@ public class SimulationScreenController extends SceneControl implements Initiali
         startSimulation();
     }
 
+    /**
+     * Initializes the data structures and UI for the simulation.
+     */
     public void runTimeInitialise(SettingsState settings) {
         //Catch
         if (settings == null) {
-            //TODO: Add Error Handeling
+            //TODO: Add Error Handling
             return;
         }
         this.currentSettings = settings;
@@ -91,7 +101,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
         antXLocation = settings.antStartPointX;
         antYLocation = settings.antStartPointY;
 
-        // BERECHNUNG: Gittergröße einmal festlegen
+        // Calculate cell size to fit the screen bounds
         double availW = 740.0 / width;
         double availH = 480.0 / height;
         this.fixedCellSize = Math.min(availW, availH);
@@ -101,7 +111,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
         redrawAll();
         spawnAntImage();
         //Screen Catch
-        if (simulationScreen != null){
+        if (simulationScreen != null) {
             simulationScreen.setText("Steps Remaining: " + stepsRemaining);
         }
     }
@@ -125,6 +135,9 @@ public class SimulationScreenController extends SceneControl implements Initiali
         simulationScreen.setText("Steps Remaining: " + stepsRemaining);
     }
 
+    /**
+     * Dynamically builds the GridPane UI based on grid dimensions.
+     */
     private void buildGridUI(int width, int height) {
         gridPane.getChildren().clear();
         gridPane.getColumnConstraints().clear();
@@ -148,7 +161,10 @@ public class SimulationScreenController extends SceneControl implements Initiali
     }
 
     private void MoveAnt() {
-        if (stepsRemaining <= 0) { stopSimulation(); return; }
+        if (stepsRemaining <= 0) {
+            stopSimulation();
+            return;
+        }
 
         boolean isBlack = antGrid[antYLocation][antXLocation];
         currentAntOrientation = rotate(isBlack ? -1 : 1);
@@ -197,7 +213,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
     }
 
     private void updateCell(int row, int col) {
-        // ZURÜCK ZU SCHWARZ-WEISS
+
         cellRects[row][col].setFill(antGrid[row][col] ? Color.BLACK : Color.WHITE);
     }
 
@@ -208,7 +224,10 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     private void updateAntRotation() {
         antView.setRotate(switch (currentAntOrientation) {
-            case up -> 0; case right -> 90; case down -> 180; case left -> 270;
+            case up -> 0;
+            case right -> 90;
+            case down -> 180;
+            case left -> 270;
         });
     }
 
@@ -224,17 +243,27 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
     //region Simulation Control
 
-    public void startSimulation() { simLoop.play(); }
-    public void pauseSimulation() {simLoop.pause(); }
-    public void stopSimulation() { simLoop.stop(); }
+    public void startSimulation() {
+        simLoop.play();
+    }
+
+    public void pauseSimulation() {
+        simLoop.pause();
+    }
+
+    public void stopSimulation() {
+        simLoop.stop();
+    }
 
     //endregion
 
     //region Button Funcs
 
-    @FXML public void pauseClicked(ActionEvent e) {
-        if (simLoop.getStatus() == Timeline.Status.RUNNING) pauseSimulation(); else startSimulation();
-        if (pauseButton.getText().equals("Pause")){
+    @FXML
+    public void pauseClicked(ActionEvent e) {
+        if (simLoop.getStatus() == Timeline.Status.RUNNING) pauseSimulation();
+        else startSimulation();
+        if (pauseButton.getText().equals("Pause")) {
             pauseButton.setText("Resume");
         } else {
             pauseButton.setText("Pause");
@@ -244,10 +273,10 @@ public class SimulationScreenController extends SceneControl implements Initiali
     /**
      * single simulation step
      */
-    public  void stepClicked(ActionEvent e) {
+    public void stepClicked(ActionEvent e) {
         //if simulation is running -> paused
         if (simLoop != null && simLoop.getStatus() == Timeline.Status.RUNNING) {
-            simLoop.pause ();
+            simLoop.pause();
             pauseButton.setText("Resume");
         }
         MoveAnt();
@@ -256,7 +285,8 @@ public class SimulationScreenController extends SceneControl implements Initiali
     /**
      * saves current simulation state
      **/
-    @FXML public void saveClicked(ActionEvent e) {
+    @FXML
+    public void saveClicked(ActionEvent e) {
         try {
             SimulationState simState = new SimulationState();
             simState.settings = currentSettings != null ? currentSettings : AppContext.get().settings;
@@ -272,24 +302,29 @@ public class SimulationScreenController extends SceneControl implements Initiali
             ex.printStackTrace();
         }
     }
-    @FXML public void exitClicked(ActionEvent e) {
-        stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.StartScreen);
+
+    @FXML
+    public void exitClicked(ActionEvent e) {
+        stopSimulation();
+        ChangeScene(gridPane, StaticVarsHolder.StartScreen);
     }
 
-    @FXML public void restartClicked(ActionEvent e) {
+    @FXML
+    public void restartClicked(ActionEvent e) {
         stopSimulation();
         ChangeScene(gridPane, StaticVarsHolder.SimulationScreen);
         startSimulation();
     }
 
-    /**
-     ** Bespiel Descriptor für diese Func
-     **/
-    @FXML public void settingsClickedInSimulation(ActionEvent e) {
-        stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.SettingsScreen);
+
+    @FXML
+    public void settingsClickedInSimulation(ActionEvent e) {
+        stopSimulation();
+        ChangeScene(gridPane, StaticVarsHolder.SettingsScreen);
     }
 
-    @FXML void exitAndSaveClicked(ActionEvent e) {
+    @FXML
+    void exitAndSaveClicked(ActionEvent e) {
         //saves simulation state
         saveClicked(e);
         stopSimulation();
