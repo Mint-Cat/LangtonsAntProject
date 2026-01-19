@@ -106,19 +106,19 @@ public class SimulationScreenController extends SceneControl implements Initiali
         }
     }
 
-    //loadSimulationState Methode für Speichern + laden
+    /**
+     * restores simulation from saved state
+     */
     public void loadSimulationState(SimulationState state) {
-        //UI anhand von saved Settings aufbauen
         runTimeInitialise(state.settings);
 
-        //saved Zustand übernehmen
         this.antGrid = state.grid;
         this.antXLocation = state.antX;
         this.antYLocation = state.antY;
         this.currentAntOrientation = state.orientation;
         this.stepsRemaining = state.stepsRemaining;
 
-        //UI aktualisieren
+        //update UI
         redrawAll();
         moveAntImageTo(antXLocation, antYLocation);
         updateAntRotation();
@@ -240,20 +240,25 @@ public class SimulationScreenController extends SceneControl implements Initiali
             pauseButton.setText("Pause");
         }
     }
-        public  void stepClicked(ActionEvent e) {
-        //Wenn Sim läuft -> pausiert
+
+    /**
+     * single simulation step
+     */
+    public  void stepClicked(ActionEvent e) {
+        //if simulation is running -> paused
         if (simLoop != null && simLoop.getStatus() == Timeline.Status.RUNNING) {
             simLoop.pause ();
-            //Selbes Verhalten wie Pause Button
             pauseButton.setText("Resume");
         }
         MoveAnt();
-        }
+    }
 
-
+    /**
+     * saves current simulation state
+     **/
     @FXML public void saveClicked(ActionEvent e) {
         try {
-            var simState = new at.ac.hcw.langtonsantproject.Persistence.SimulationState();
+            SimulationState simState = new SimulationState();
             simState.settings = currentSettings != null ? currentSettings : AppContext.get().settings;
             simState.grid = antGrid;
             simState.antX = antXLocation;
@@ -285,7 +290,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
     }
 
     @FXML void exitAndSaveClicked(ActionEvent e) {
-        //Speichert Simulationszustand
+        //saves simulation state
         saveClicked(e);
         stopSimulation();
         ChangeScene(gridPane, StaticVarsHolder.StartScreen);

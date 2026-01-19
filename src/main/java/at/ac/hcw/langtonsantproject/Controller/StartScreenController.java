@@ -44,27 +44,22 @@ public class StartScreenController extends SceneControl implements Initializable
         ChangeScene(actionEvent, StaticVarsHolder.SettingsScreen);
     }
 
+    /**
+     * loads saved simulation state
+     */
     @FXML
     public void LoadAntButtonClick(ActionEvent actionEvent) {
         try {
-            // 1. Simulationszustand laden
             var simState = AppContext.get().saveService.loadSimulation("default");
-
-            //2. Settings in AppContext -> initialize in SimulationScreen
             AppContext.get().settings = simState.settings;
 
-            //3. SimulationScreen manuell laden -> Controller
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
                     getClass().getResource(StaticVarsHolder.SimulationScreen)
             );
+
             javafx.scene.Parent root = loader.load();
-
             SimulationScreenController controller = loader.getController();
-
-            //4. Simulationszustand im Controller benutzen
             controller.loadSimulationState(simState);
-
-            //5. Scene setzen
             javafx.stage.Stage stage = (javafx.stage.Stage) gridPane.getScene().getWindow();
             javafx.scene.Scene scene = new javafx.scene.Scene(root, 800, 600);
             stage.setScene(scene);
@@ -78,6 +73,9 @@ public class StartScreenController extends SceneControl implements Initializable
         }
     }
 
+    /**
+     * deletes saved state
+     */
     @FXML
     public void DeleteAntButtonClick(ActionEvent actionEvent) {
         try {
