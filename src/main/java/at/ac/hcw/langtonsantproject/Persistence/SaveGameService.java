@@ -9,56 +9,36 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
- //Persistenz-Schicht: Speichern/Laden/Löschen von Settings als JSON.
+/**
+ * Persistence layer for saving, loading, and deleting simulation data as JSON.
+ */
 
 public class SaveGameService {
-
+    // Configures GSON for human-readable output
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    // Hidden storage directory in the user's home folder
     private final Path dir = Paths.get(System.getProperty("user.home"), ".langtons-ant");
-
+    /** Returns the path for general settings files. */
     private Path file(String slot) {
         return dir.resolve(slot + ".json");
     }
-
-    public boolean exists(String slot) {
-        return Files.exists(file(slot));
-    }
-
-    public void save(String slot, SettingsState state) throws IOException {
-        Files.createDirectories(dir);
-
-        Path tmp = dir.resolve(slot + ".tmp");
-        Path target = file(slot);
-
-        try (Writer w = Files.newBufferedWriter(tmp, StandardCharsets.UTF_8)) {
-            gson.toJson(state, w);
-        }
-
-        Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-    }
-
-    public SettingsState load(String slot) throws IOException {
-        Path target = file(slot);
-
-        try (Reader r = Files.newBufferedReader(target, StandardCharsets.UTF_8)) {
-            return gson.fromJson(r, SettingsState.class);
-        }
-    }
-
+    /** Deletes a specific settings slot. */
     public void delete(String slot) throws IOException {
         Files.deleteIfExists(file(slot));
 
         }
-        // Sim. Save state löschen
+    /** Deletes a specific simulation progress slot. */
     public void deleteSimulation(String slot) throws IOException {
         Files.deleteIfExists(simFile(slot));
         }
 
+    /** Returns the path for simulation state files. */
     private Path simFile(String slot) {
-
         return dir.resolve(slot + "_sim.json");
         }
-
+    /** * Saves the simulation state using a temporary file and atomic move
+     * to ensure data integrity during the save process.
+     */
     public void saveSimulation(String slot, SimulationState state) throws IOException {
         Files.createDirectories(dir);
         Path tmp = dir.resolve(slot + "_sim.tmp");
@@ -73,6 +53,7 @@ public class SaveGameService {
                 StandardCopyOption.ATOMIC_MOVE);
         }
 
+    /** Loads a simulation state from a JSON file. */
     public SimulationState loadSimulation(String slot) throws IOException {
         Path target = simFile(slot);
         try (Reader r = Files.newBufferedReader(target, StandardCharsets.UTF_8)) {

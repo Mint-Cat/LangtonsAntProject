@@ -77,7 +77,7 @@ public class StartScreenController extends SceneControl implements Initializable
      * deletes saved state
      */
     @FXML
-    public void DeleteAntButtonClick(ActionEvent actionEvent) {
+    public void DeleteAntButtonClick() {
         try {
             //Settings-Save löschen
             AppContext.get().saveService.delete("default");
