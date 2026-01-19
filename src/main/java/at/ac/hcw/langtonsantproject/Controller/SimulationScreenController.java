@@ -5,6 +5,7 @@ import at.ac.hcw.langtonsantproject.Misc.AntOrientation;
 import at.ac.hcw.langtonsantproject.Misc.StaticVarsHolder;
 import at.ac.hcw.langtonsantproject.Persistence.SettingsState;
 import at.ac.hcw.langtonsantproject.Inheritable.SceneControl;
+import at.ac.hcw.langtonsantproject.Persistence.SimulationState;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -22,7 +23,6 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLOutput;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -51,7 +51,11 @@ public class SimulationScreenController extends SceneControl implements Initiali
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SettingsState settings = AppContext.get().settings;
-        if (settings == null) return;
+        if (settings == null) {
+
+
+            return;
+        }
 
         // CSS laden
         String css = getClass().getResource("/at/ac/hcw/langtonsantproject/style.css").toExternalForm();
@@ -71,6 +75,11 @@ public class SimulationScreenController extends SceneControl implements Initiali
     }
 
     public void runTimeInitialise(SettingsState settings) {
+        //Catch
+        if (settings == null) {
+            //TODO: Add Error Handeling
+            return;
+        }
         this.currentSettings = settings;
         int height = (int) settings.height;
         int width = (int) settings.width;
@@ -92,11 +101,14 @@ public class SimulationScreenController extends SceneControl implements Initiali
         buildGridUI(width, height);
         redrawAll();
         spawnAntImage();
-        simulationScreen.setText("Steps Remaining: " + stepsRemaining);
+        //Screen Catch
+        if (simulationScreen != null){
+            simulationScreen.setText("Steps Remaining: " + stepsRemaining);
+        }
     }
 
     //loadSimulationState Methode für Speichern + laden
-    public void loadSimulationState(at.ac.hcw.langtonsantproject.Persistence.SimulationState state) {
+    public void loadSimulationState(SimulationState state) {
         //UI anhand von saved Settings aufbauen
         runTimeInitialise(state.settings);
 
@@ -211,9 +223,13 @@ public class SimulationScreenController extends SceneControl implements Initiali
             for (int c = 0; c < antGrid[r].length; c++) updateCell(r, c);
     }
 
+    //------------ Simulation Control
+
     public void startSimulation() { simLoop.play(); }
     public void pauseSimulation() {simLoop.pause(); }
     public void stopSimulation() { simLoop.stop(); }
+
+    //------------ Button Funcs
 
     @FXML public void pauseClicked(ActionEvent e) {
         if (simLoop.getStatus() == Timeline.Status.RUNNING) pauseSimulation(); else startSimulation();
@@ -260,6 +276,9 @@ public class SimulationScreenController extends SceneControl implements Initiali
         startSimulation();
     }
 
+    /**
+     ** Bespiel Descriptor für diese Func
+     **/
     @FXML public void settingsClickedInSimulation(ActionEvent e) {
         stopSimulation(); ChangeScene(gridPane, StaticVarsHolder.SettingsScreen);
     }
