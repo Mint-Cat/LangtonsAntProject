@@ -20,7 +20,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -59,8 +58,7 @@ public class SimulationScreenController extends SceneControl implements Initiali
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SettingsState settings = AppContext.get().settings;
         if (settings == null) {
-
-
+            System.out.println("Settings not found");
             return;
         }
         // Load global CSS
@@ -79,14 +77,13 @@ public class SimulationScreenController extends SceneControl implements Initiali
 
         startSimulation();
     }
-
     /**
      * Initializes the data structures and UI for the simulation.
      */
     public void runTimeInitialise(SettingsState settings) {
         //Catch
         if (settings == null) {
-            //TODO: Add Error Handling
+            System.out.println("Settings not found");
             return;
         }
         this.currentSettings = settings;
@@ -115,11 +112,15 @@ public class SimulationScreenController extends SceneControl implements Initiali
             simulationScreen.setText("Steps Remaining: " + stepsRemaining);
         }
     }
-
     /**
-     * restores simulation from saved state
+     * Restores simulation from saved state
      */
     public void loadSimulationState(SimulationState state) {
+        //Catch
+        if (state == null){
+            System.out.println("Settings not found");
+            return;
+        }
         runTimeInitialise(state.settings);
 
         this.antGrid = state.grid;
@@ -139,6 +140,11 @@ public class SimulationScreenController extends SceneControl implements Initiali
      * Dynamically builds the GridPane UI based on grid dimensions.
      */
     private void buildGridUI(int width, int height) {
+        if (width <=0 || height <=0){
+            System.out.println("Height or Width can not be less than 1");
+            return;
+        }
+
         gridPane.getChildren().clear();
         gridPane.getColumnConstraints().clear();
         gridPane.getRowConstraints().clear();
@@ -159,7 +165,9 @@ public class SimulationScreenController extends SceneControl implements Initiali
             }
         }
     }
-
+    /**
+     * Moves ant UI pos & initiates rotation
+     */
     private void MoveAnt() {
         if (stepsRemaining <= 0) {
             stopSimulation();
